@@ -28,4 +28,10 @@
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\img\clients_img\" />
+    <Folder Include="wwwroot\img\masters_img\info\" />
+    <Folder Include="wwwroot\img\masters_img\works\" />
+  </ItemGroup>
+
 </Project>
