@@ -8,6 +8,16 @@ html {
   }
 }
 
+@font-face {
+    font-family: "ExtraOrnamentalNo2";
+    src: url(/fonts/ExtraOrnamentalNo2.ttf);
+}
+
+@font-face {
+    font-family: "FrenchKiss";
+    src: url(/fonts/FrenchKissscript.ttf)
+}
+
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
   box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
@@ -20,3 +30,13 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.main-name{
+    font-family: 'ExtraOrnamentalNo2';
+    color: black;
+}
+
+.maintext {
+    font-family: 'FrenchKiss';
+}
+

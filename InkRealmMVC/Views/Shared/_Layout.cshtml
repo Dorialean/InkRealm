@@ -10,37 +10,43 @@
     <link rel="icon" type="image/x-icon" href="~/favicon.png" asp-append-version="true">
 </head>
 <body>
+    @{
+        IReadOnlyList<string> NAV_BAR_BTNS_NAMES = new List<string>() { "Студии", "Услуги", "Мастера", "Магазин", "Приватность" };
+    }
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">InkRealmMVC</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
+        <nav class="navbar navbar-expand-lg navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container">
+                <a class="col-3 navbar-brand main-name fs-1" asp-controller="Home" asp-action="Index">Ink Realm</a>
+                <div class="col-6 navbar-collapse">
+                    <div class="navbar-nav align-content-sm-center">
+                        @foreach (var name in NAV_BAR_BTNS_NAMES)
+                        {
+                            <a class="nav-item nav-link maintext fs-2 p-1 ms-lg-3 me-lg-3 m-sm-2 text-sm-center text-md-center" href="#">
+                                <strong>@name</strong>
+                            </a>
+                        }
+                        <button class="col-lg-3 nav-item ms-lg-5 btn-danger">
+                            <a class="nav-item nav-link maintext fs-2 p-1 text-sm-center text-md-center" href="#">
+                                <img class="rounded-1" style="max-height:40px;" src="/img/app_img/user_icon.png" />
+                                <strong>Войти</strong>
+                            </a>
+                        </button>
+                        
+                    </div>
                 </div>
             </div>
         </nav>
     </header>
 
     <div class="container">
-        <main role="main" class="pb-3">
+        <main role="main" class="pb-3" >
             @RenderBody()
         </main>
     </div>
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2022 - InkRealmMVC - <a asp-area="" asp-controller="Home" asp-action="Privacy">Политика приватности</a>
+            <a class="col navbar-brand main-name fs-6" asp-controller="Home" asp-action="Index">Ink Realm @DateTime.Now.Year</a>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
