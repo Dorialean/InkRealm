@@ -26,7 +26,7 @@
                             </a>
                         }
                         <button class="col-lg-3 nav-item ms-lg-5 btn-danger">
-                            <a class="nav-item nav-link maintext fs-2 p-1 text-sm-center text-md-center" href="#">
+                            <a class="nav-item nav-link maintext fs-2 p-1 text-sm-center text-md-center" asp-controller="Auth" asp-action="Login">
                                 <img class="rounded-1" style="max-height:40px;" src="/img/app_img/user_icon.png" />
                                 <strong>Войти</strong>
                             </a>
@@ -47,6 +47,7 @@
     <footer class="border-top footer text-muted">
         <div class="container">
             <a class="col navbar-brand main-name fs-6" asp-controller="Home" asp-action="Index">Ink Realm @DateTime.Now.Year</a>
+            <a class="col mt-2 float-end btn btn-outline-dark" asp-controller="Auth" asp-action="Login"> Зона для сотрудников</a>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

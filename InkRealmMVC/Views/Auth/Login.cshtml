@@ -1,0 +1,17 @@
+﻿@model LoginModel
+@{
+    ViewData["Title"] = "Вход в систему";
+}
+
+@using (Html.BeginForm("Login", "Auth", FormMethod.Post, new { @class = "row login-form" }))
+{
+    <label class="form-label">Логин</label>
+    @Html.TextBoxFor(l => l.Login, "Логин", new { placeholder="Логин", @class="row form-control mb-3", @id="login"})
+    <label class="form-label"> Пароль </label>
+    @Html.PasswordFor(p => p.Password, new { placeholder="Пароль", @class="row form-control", @id="password"})
+    <input class="row btn btn-outline-danger mt-5" type="submit" />
+}
+
+@section Scripts{
+    <link rel="stylesheet" href="~/css/login.css" asp-append-version="true" />
+}
