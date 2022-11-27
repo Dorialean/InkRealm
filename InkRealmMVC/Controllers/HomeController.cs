@@ -8,12 +8,10 @@ namespace InkRealmMVC.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
         private readonly InkRealmContext _context;
 
-        public HomeController(ILogger<HomeController> logger, InkRealmContext context)
+        public HomeController(InkRealmContext context)
         {
-            _logger = logger;
             _context = context;
         }
 

@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
-string connString = Environment.GetEnvironmentVariable("POSTGRES_CONNECTION_STRING");
+string? connString = Environment.GetEnvironmentVariable("POSTGRES_CONNECTION_STRING");
 builder.Services.AddDbContext<InkRealmContext>(options => options.UseNpgsql(connString));
 
 var app = builder.Build();
