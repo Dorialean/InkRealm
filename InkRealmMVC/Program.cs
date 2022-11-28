@@ -1,6 +1,7 @@
-using InkRealmMVC.Models.DbModels;
+﻿using InkRealmMVC.Models.DbModels;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
+using InkRealmMVC.Controllers.Api;
 
 var builder = WebApplication.CreateBuilder(args);
 

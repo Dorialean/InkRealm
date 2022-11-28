@@ -48,7 +48,10 @@ public partial class InkMaster
     public byte[] Password { get; set; } = null!;
 
     [Column("registered")]
-    public TimeOnly Registered { get; set; }
+    public TimeOnly Registered { get; set; } = TimeOnly.FromDateTime(DateTime.Now);
+
+    [Column("ink_post")]
+    public string InkPost { get; set; } = null!;
 
     [InverseProperty("MasterReviewNavigation")]
     public virtual MasterReview? MasterReviewMasterReviewNavigation { get; set; }

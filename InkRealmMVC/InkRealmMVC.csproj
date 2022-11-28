@@ -25,11 +25,13 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="7.0.0" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7.0.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\Api\" />
+    <Folder Include="Views\MasterArea\" />
+    <Folder Include="Views\ClientArea\" />
     <Folder Include="wwwroot\img\clients_img\" />
     <Folder Include="wwwroot\img\masters_img\info\" />
     <Folder Include="wwwroot\img\masters_img\works\" />
