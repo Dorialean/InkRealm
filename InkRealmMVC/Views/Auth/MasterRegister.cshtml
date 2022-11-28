@@ -9,7 +9,7 @@
 
 
 <a class="row mt-3 mb-5 fs-1 link-info maintext" asp-action="Login" asp-controller="Auth">Я уже зарегистрирован</a>
-@using (Html.BeginForm("MasterRegister", "Auth", FormMethod.Post, new { @class="col" }))
+@using (Html.BeginForm("MasterRegister", "Auth", FormMethod.Post, new { @class = "col", enctype = "multipart/form-data" }))
 {
     <label class="row col-form-label">Введите логин</label>
     @Html.TextBoxFor(m => m.Login,  new { @class = formsClasses, placeholder="Логин" })
@@ -31,6 +31,6 @@
     @Html.DropDownListFor(m => m.StudioAddress, studios, new {@classes = "row mt-1 mb-1 form-select"})
     <label class="row col-form-label">Ваша должность</label>
     @Html.DropDownListFor(m => m.InkPost, profs, new { @classes = "row mt-1 mb-1 form-select" })
-    <input class="row mt-3 mb-2 form-control" asp-for="Photo" accept="/img/masters_img/*" />
+    <input class="row mt-3 mb-2 form-control" type="file" asp-for="Photo" />
     <input class="row mt-1 mb-1 btn btn-outline-dark" type="submit" value="Зарегистрироваться" />
 }

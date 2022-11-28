@@ -1,8 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace InkRealmMVC.Controllers
 {
     public class MasterAreaController : Controller
     {
+        [Authorize]
+        public IActionResult MasterArea() { return View(); }
     }
 }
