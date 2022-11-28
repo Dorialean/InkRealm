@@ -154,7 +154,6 @@ CREATE TABLE public.ink_masters (
     second_name character varying(30) NOT NULL,
     father_name character varying(30),
     photo_link text,
-    service_id integer NOT NULL,
     experience_years integer,
     other_info jsonb,
     studio_id uuid NOT NULL,
@@ -265,6 +264,18 @@ CREATE TABLE public.master_reviews (
 ALTER TABLE public.master_reviews OWNER TO postgres;
 
 --
+-- Name: masters_services; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.masters_services (
+    master_id integer,
+    service_id integer
+);
+
+
+ALTER TABLE public.masters_services OWNER TO postgres;
+
+--
 -- Name: masters_supplies; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -337,7 +348,7 @@ COPY public.ink_clients (client_id, first_name, surname, father_name, mobile_pho
 -- Data for Name: ink_masters; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public.ink_masters (master_id, first_name, second_name, father_name, photo_link, service_id, experience_years, other_info, studio_id, login, password, registered, ink_post) FROM stdin;
+COPY public.ink_masters (master_id, first_name, second_name, father_name, photo_link, experience_years, other_info, studio_id, login, password, registered, ink_post) FROM stdin;
 \.
 
 
@@ -368,6 +379,9 @@ COPY public.ink_services (service_id, title, description, min_price, max_price) 
 --
 
 COPY public.ink_supplies (supl_id, title, description, price) FROM stdin;
+d558af9e-8de2-48d6-966d-beaa221e7f1e	Тату-машинка	Скорость, 10В-1Вт об / мин, мощная, может использоваться для затенения и накладки. Подключается к линии постоянного тока, пусковое напряжение: 5 В, рабочее напряжение: 8-10 В. Частота переключения: 55-165 Гц, ход: 3,5 мм, регулируемая глубина иглы 0-4 мм.\r\n\r\nПреимущества ручки для татуировки, Эргономичная, легкая машина в виде ручки, имитирующая захват и ощущение настоящей ручки, эта ручка для татуировки позволяет сделать процедуру татуировки более удобной и точной.	4 153,99 ?
+1ca3034b-229a-4fe1-af63-ade1960e2217	Резиновые перчатки	Чёрные резиновые перчатки	49,99 ?
+866f076b-1e29-40ab-a323-9919687a7189	футболка InkRealm	Черная футболка InkRealm	1 399,99 ?
 \.
 
 
@@ -376,6 +390,14 @@ COPY public.ink_supplies (supl_id, title, description, price) FROM stdin;
 --
 
 COPY public.master_reviews (master_review_id, client_id, master_id, rating, review) FROM stdin;
+\.
+
+
+--
+-- Data for Name: masters_services; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.masters_services (master_id, service_id) FROM stdin;
 \.
 
 
@@ -562,14 +584,6 @@ ALTER TABLE ONLY public.clients_needs
 
 
 --
--- Name: ink_masters ink_masters_service_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.ink_masters
-    ADD CONSTRAINT ink_masters_service_id_fkey FOREIGN KEY (service_id) REFERENCES public.ink_services(service_id);
-
-
---
 -- Name: ink_masters ink_masters_studio_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -599,6 +613,22 @@ ALTER TABLE ONLY public.master_reviews
 
 ALTER TABLE ONLY public.master_reviews
     ADD CONSTRAINT master_reviews_master_review_id_fkey FOREIGN KEY (master_review_id) REFERENCES public.ink_masters(master_id);
+
+
+--
+-- Name: masters_services masters_services_master_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.masters_services
+    ADD CONSTRAINT masters_services_master_id_fkey FOREIGN KEY (master_id) REFERENCES public.ink_masters(master_id);
+
+
+--
+-- Name: masters_services masters_services_service_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.masters_services
+    ADD CONSTRAINT masters_services_service_id_fkey FOREIGN KEY (service_id) REFERENCES public.ink_services(service_id);
 
 
 --
