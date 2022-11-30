@@ -10,9 +10,6 @@ namespace InkRealmMVC.Models.DbModels;
 public partial class ClientsNeed
 {
     [Key]
-    [Column("clients_needs_id")]
-    public Guid ClientsNeedsId { get; set; }
-
     [Column("client_id")]
     public int ClientId { get; set; }
 

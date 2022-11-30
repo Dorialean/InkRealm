@@ -33,9 +33,6 @@ public partial class InkClient
     [StringLength(60)]
     public string? Email { get; set; }
 
-    [Column("client_needs_id")]
-    public Guid? ClientNeedsId { get; set; }
-
     [Column("login")]
     [StringLength(50)]
     public string Login { get; set; } = null!;

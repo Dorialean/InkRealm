@@ -54,11 +54,10 @@ SET default_table_access_method = heap;
 --
 
 CREATE TABLE public.clients_needs (
-    clients_needs_id uuid DEFAULT gen_random_uuid() NOT NULL,
-    client_id integer NOT NULL,
     service_id integer,
     service_date timestamp without time zone,
-    order_id uuid
+    order_id uuid,
+    client_id integer NOT NULL
 );
 
 
@@ -75,7 +74,6 @@ CREATE TABLE public.ink_clients (
     father_name character varying(30),
     mobile_phone character varying(20),
     email character varying(60),
-    client_needs_id uuid,
     login character varying(50) NOT NULL,
     password bytea NOT NULL,
     registered timestamp without time zone DEFAULT now() NOT NULL,
@@ -309,7 +307,7 @@ ALTER TABLE ONLY public.ink_services ALTER COLUMN service_id SET DEFAULT nextval
 -- Data for Name: clients_needs; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public.clients_needs (clients_needs_id, client_id, service_id, service_date, order_id) FROM stdin;
+COPY public.clients_needs (service_id, service_date, order_id, client_id) FROM stdin;
 \.
 
 
@@ -317,7 +315,7 @@ COPY public.clients_needs (clients_needs_id, client_id, service_id, service_date
 -- Data for Name: ink_clients; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public.ink_clients (client_id, first_name, surname, father_name, mobile_phone, email, client_needs_id, login, password, registered) FROM stdin;
+COPY public.ink_clients (client_id, first_name, surname, father_name, mobile_phone, email, login, password, registered) FROM stdin;
 \.
 
 
@@ -416,7 +414,7 @@ SELECT pg_catalog.setval('public.ink_clients_client_id_seq', 1, false);
 -- Name: ink_masters_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.ink_masters_seq', 1, false);
+SELECT pg_catalog.setval('public.ink_masters_seq', 1, true);
 
 
 --
@@ -434,11 +432,11 @@ SELECT pg_catalog.setval('public.masters_reviews_seq', 1, false);
 
 
 --
--- Name: clients_needs clients_needs_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: clients_needs clients_needs_pk; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public.clients_needs
-    ADD CONSTRAINT clients_needs_pkey PRIMARY KEY (clients_needs_id);
+    ADD CONSTRAINT clients_needs_pk PRIMARY KEY (client_id);
 
 
 --
@@ -542,14 +540,6 @@ ALTER TABLE ONLY public.clients_needs
 
 ALTER TABLE ONLY public.clients_needs
     ADD CONSTRAINT clients_needs_service_id_fkey FOREIGN KEY (service_id) REFERENCES public.ink_services(service_id);
-
-
---
--- Name: ink_clients fk_clients_needs_id; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.ink_clients
-    ADD CONSTRAINT fk_clients_needs_id FOREIGN KEY (client_needs_id) REFERENCES public.clients_needs(clients_needs_id);
 
 
 --
