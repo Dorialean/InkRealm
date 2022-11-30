@@ -1,4 +1,5 @@
 ﻿using InkRealmMVC.Models.DbModels;
+using System.Reflection.Metadata.Ecma335;
 
 namespace InkRealmMVC.Models
 {
@@ -16,6 +17,7 @@ namespace InkRealmMVC.Models
         public string? OtherInfo { get; set; }
         public TimeOnly Registered { get; set; } = TimeOnly.FromDateTime(DateTime.Now);
         public List<string> ServicesTitles { get; set; } = null!;
+        public List<string>? SuppliesTitles { get; set; }
         public string StudioAddress { get; set; }
         public Guid StudioId { get; set; }
         public string InkPost { get; set; }
@@ -23,6 +25,7 @@ namespace InkRealmMVC.Models
         public List<InkService>? AllServices { get; set; }
 
         public List<string>? AllProfs { get; set; }
+        public List<InkSupply>? AllSupplies { get; set; }
 
     }
 }

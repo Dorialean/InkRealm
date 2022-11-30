@@ -17,6 +17,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="Views\MasterArea\MasterArea.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -30,11 +34,22 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Views\MasterArea\" />
     <Folder Include="Views\ClientArea\" />
     <Folder Include="wwwroot\img\clients_img\" />
     <Folder Include="wwwroot\img\masters_img\info\" />
     <Folder Include="wwwroot\img\masters_img\works\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Views\MasterArea\MasterArea.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Views\MasterArea\MasterArea.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Views\MasterArea\MasterArea.cshtml" />
   </ItemGroup>
 
 </Project>

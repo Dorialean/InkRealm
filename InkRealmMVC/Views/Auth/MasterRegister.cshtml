@@ -5,32 +5,47 @@
     MultiSelectList services = new(Model.AllServices.Select(x => x.Title).ToList());
     SelectList studios = new(Model.AllStudios.Select(s => s.Address).ToList());
     SelectList profs = new(Model.AllProfs);
+    MultiSelectList supplies = new(Model.AllSupplies.Select(s => s.Title).ToList());
 }
 
-
+@*На самом деле подход через таг-хелперы в атрбитуах мне нравится больше, лучше переписать будет*@
 <a class="row mt-3 mb-5 fs-1 link-info maintext" asp-action="Login" asp-controller="Auth">Я уже зарегистрирован</a>
 @using (Html.BeginForm("MasterRegister", "Auth", FormMethod.Post, new { @class = "col", enctype = "multipart/form-data" }))
 {
     <label class="row col-form-label">Введите логин</label>
     @Html.TextBoxFor(m => m.Login,  new { @class = formsClasses, placeholder="Логин" })
+
     <label class="row col-form-label">Введите пароль</label>
     @Html.PasswordFor(m => m.Password, new { @class = formsClasses, placeholder="Пароль" })
+
     <label class="row col-form-label">Повторите пароль</label>
     <input class="row mt-1 mb-1 form-control" type="password" id="passwordCheck" placeholder="Повторите пароль"/>
+
     <label class="row col-form-label">Введите Имя</label>
     @Html.TextBoxFor(m => m.FirstName, new { @class = formsClasses, placeholder="Имя" })
+
     <label class="row col-form-label">Введите Фамилию</label>
     @Html.TextBoxFor(m => m.SecondName, new { @class = formsClasses, placeholder="Фамилия" })
+
     <label class="row col-form-label">Введите Отчество</label>
     @Html.TextBoxFor(m => m.FatherName, new { @class = formsClasses, placeholder="Отчество" })
+
     <label class="row col-form-label">Введите стаж работы</label>
     @Html.TextBoxFor(m => m.ExperienceYears, new { @class = formsClasses, placeholder="Количество лет в профессии", @type="number", @min="0" })
+
     <label class="row col-form-label">Выберите что вы умеете [Для выбора нескольких зажмите Ctrl и левой кнопкой мыши по нужным строкам]</label>
-    @Html.ListBoxFor(m => m.ServicesTitles, services, new {@classes = "row mt-1 mb-1 form-select"})
+    @Html.ListBoxFor(m => m.ServicesTitles, services, new {@class = "row mt-1 mb-1 form-select"})
+
     <label class="row col-form-label">Выберите где находится Ваша студия</label>
-    @Html.DropDownListFor(m => m.StudioAddress, studios, new {@classes = "row mt-1 mb-1 form-select"})
+    @Html.DropDownListFor(m => m.StudioAddress, studios, new {@class = "row mt-1 mb-1 form-select"})
+
     <label class="row col-form-label">Ваша должность</label>
-    @Html.DropDownListFor(m => m.InkPost, profs, new { @classes = "row mt-1 mb-1 form-select" })
+    @Html.DropDownListFor(m => m.InkPost, profs, new { @class = "row mt-1 mb-1 form-select" })
+    
     <input class="row mt-3 mb-2 form-control" type="file" asp-for="Photo" />
+
+    <label class="row col-form-label">Выберите инструменты, которые Вам пригодятся</label>
+    @Html.ListBoxFor(m => m.SuppliesTitles, supplies, new {@class = "row mt-1 mb-1 form-select"})
+
     <input class="row mt-1 mb-1 btn btn-outline-dark" type="submit" value="Зарегистрироваться" />
 }

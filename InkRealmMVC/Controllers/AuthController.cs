@@ -33,17 +33,22 @@ namespace InkRealmMVC.Controllers
         {
             List<Studio> allStudios;
             List<InkService> allInkServices;
+            List<InkSupply> allInkSupplies;
             string[] profs = new string[] { "sketch designer", "tatoo master", "pirsing master" };
+
             using (_context)
             {
-                allStudios = _context.Studios.ToList();
-                allInkServices = _context.InkServices.ToList();   
+                allStudios = await _context.Studios.ToListAsync();
+                allInkServices = await _context.InkServices.ToListAsync();
+                allInkSupplies = await _context.InkSupplies.ToListAsync();
             }
+
             return await Task.Run(() => View(new MasterRegister()
             {
                 AllServices = allInkServices,
                 AllStudios = allStudios,
-                AllProfs = profs.ToList()
+                AllProfs = profs.ToList(),
+                AllSupplies = allInkSupplies
             }));
         }
         [HttpPost]
@@ -57,8 +62,6 @@ namespace InkRealmMVC.Controllers
                 var file = master.Photo;
                 master.PhotoLink = await AddPictureAsync(file, MASTER_PICTURE_INFO_PATH);
             }
-            else
-                master.PhotoLink = string.Empty;
 
             using (_context)
             {
@@ -66,6 +69,7 @@ namespace InkRealmMVC.Controllers
                     return await Task.Run(() => BadRequest("Пользователь с таким логином уже существует"));
 
                 master.EncryptedPassword = GeneratePassword(master.Password, master.Registered);
+                master.StudioId = _context.Studios.First(s => s.Address == master.StudioAddress).StudioId;
 
                 string sql = $"""
                     INSERT INTO ink_masters(first_name, 
@@ -77,16 +81,16 @@ namespace InkRealmMVC.Controllers
                         login, 
                         password, 
                         ink_post,
-                        registered) VALUES ({master.FirstName},
-                        {master.SecondName},
-                        {master.FatherName},
-                        {master.PhotoLink},
+                        registered) VALUES ('{master.FirstName}',
+                        '{master.SecondName}',
+                        '{master.FatherName}',
+                        '{master.PhotoLink}',
                         {master.ExperienceYears},
-                        {master.StudioId},
-                        {master.Login},
-                        {Convert.ToBase64String(master.EncryptedPassword)},
-                        {master.InkPost},
-                        {master.Registered});
+                        '{master.StudioId}',
+                        '{master.Login}',
+                        '{master.EncryptedPassword}',
+                        '{master.InkPost}',
+                        '{master.Registered}');
                     """;
                 using (NpgsqlConnection conn = new(Environment.GetEnvironmentVariable("POSTGRES_CONNECTION_STRING")))
                 {
@@ -94,13 +98,13 @@ namespace InkRealmMVC.Controllers
                     NpgsqlCommand cmd = new(sql, conn);
                     cmd.ExecuteNonQuery();
                     int masterId = 0;
-                    sql = $""" SELECT master_id WHERE login = {master.Login} """;
+                    sql = $""" SELECT master_id FROM ink_masters WHERE login = '{master.Login}' """;
                     cmd = new(sql, conn);
                     var res = await cmd.ExecuteScalarAsync();
 
                     if (res != null)
                     {
-                        masterId = int.Parse(res.ToString());
+                        int.TryParse(res.ToString(),out masterId);
                     }
 
                     if (masterId != 0)
@@ -108,6 +112,13 @@ namespace InkRealmMVC.Controllers
                         foreach (string serviceTitle in master.ServicesTitles)
                         {
                             sql = $"""INSERT INTO masters_services(master_id, service_id) VALUES ({masterId}, {_context.InkServices.First(s => s.Title == serviceTitle).ServiceId});""";
+                            cmd = new(sql, conn);
+                            await cmd.ExecuteNonQueryAsync();
+                        }
+
+                        foreach (string supplyTitle in master.SuppliesTitles)
+                        {
+                            sql = $"""INSERT INTO masters_supplies(master_id, supl_id, amount) VALUES ({masterId}, {_context.InkSupplies.First(s => s.Title == supplyTitle).SuplId, 1});""";
                             cmd = new(sql, conn);
                             await cmd.ExecuteNonQueryAsync();
                         }
