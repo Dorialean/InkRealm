@@ -18,7 +18,4 @@ public partial class Studio
 
     [Column("rental_price_per_month", TypeName = "money")]
     public decimal? RentalPricePerMonth { get; set; }
-
-    [InverseProperty("Studio")]
-    public virtual ICollection<InkMaster> InkMasters { get; } = new List<InkMaster>();
 }

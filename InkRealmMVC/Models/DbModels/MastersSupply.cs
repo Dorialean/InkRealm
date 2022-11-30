@@ -18,12 +18,4 @@ public partial class MastersSupply
 
     [Column("amount")]
     public int? Amount { get; set; }
-
-    [ForeignKey("MasterId")]
-    [InverseProperty("MastersSupply")]
-    public virtual InkMaster Master { get; set; } = null!;
-
-    [ForeignKey("SuplId")]
-    [InverseProperty("MastersSupplies")]
-    public virtual InkSupply? Supl { get; set; }
 }

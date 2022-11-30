@@ -18,6 +18,10 @@ namespace InkRealmMVC.Controllers
         private readonly InkRealmContext _context;
         private readonly SHA256 sha256 = SHA256.Create();
 
+        const string MASTER_PICTURE_INFO_PATH = "wwwroot/img/masters_img/info";
+        const string MASTER_PICTURE_WORK_PATH = "wwwroot/img/masters_img/works";
+        const string CLIENT_PICTURE_PATH = "wwwroot/img/clients_img";
+
         public AuthController(InkRealmContext context)
         {
             _context = context;
@@ -29,6 +33,7 @@ namespace InkRealmMVC.Controllers
         {
             List<Studio> allStudios;
             List<InkService> allInkServices;
+            string[] profs = new string[] { "sketch designer", "tatoo master", "pirsing master" };
             using (_context)
             {
                 allStudios = _context.Studios.ToList();
@@ -38,7 +43,7 @@ namespace InkRealmMVC.Controllers
             {
                 AllServices = allInkServices,
                 AllStudios = allStudios,
-                AllProfs = new() { "sketch designer", "tatoo master", "pirsing master" }
+                AllProfs = profs.ToList()
             }));
         }
         [HttpPost]
@@ -47,24 +52,20 @@ namespace InkRealmMVC.Controllers
             if (!IsValidModel(master))
                 return await Task.Run(() => BadRequest("Введены не все данные"));
 
-            if(master.Photo != null)
+            if (master.Photo != null)
             {
                 var file = master.Photo;
-                string imageName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
-                string photoPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/img/clients_img", imageName);
-                using (Stream fileStream = new FileStream(photoPath, FileMode.Create))
-                {
-                    await file.CopyToAsync(fileStream);
-                }
-                master.PhotoLink = photoPath;
+                master.PhotoLink = await AddPictureAsync(file, MASTER_PICTURE_INFO_PATH);
             }
+            else
+                master.PhotoLink = string.Empty;
 
             using (_context)
             {
                 if (await _context.InkMasters.FirstOrDefaultAsync(m => m.Login == master.Login) != null)
                     return await Task.Run(() => BadRequest("Пользователь с таким логином уже существует"));
 
-                master.EncryptedPassword = await GeneratePasswordAsync(master.Password, master.Registered);
+                master.EncryptedPassword = GeneratePassword(master.Password, master.Registered);
 
                 string sql = $"""
                     INSERT INTO ink_masters(first_name, 
@@ -83,17 +84,15 @@ namespace InkRealmMVC.Controllers
                         {master.ExperienceYears},
                         {master.StudioId},
                         {master.Login},
-                        {master.EncryptedPassword},
+                        {Convert.ToBase64String(master.EncryptedPassword)},
                         {master.InkPost},
-                        {master.Registered}
-                        );
+                        {master.Registered});
                     """;
                 using (NpgsqlConnection conn = new(Environment.GetEnvironmentVariable("POSTGRES_CONNECTION_STRING")))
                 {
                     conn.Open();
                     NpgsqlCommand cmd = new(sql, conn);
-                    await cmd.ExecuteNonQueryAsync();
-
+                    cmd.ExecuteNonQuery();
                     int masterId = 0;
                     sql = $""" SELECT master_id WHERE login = {master.Login} """;
                     cmd = new(sql, conn);
@@ -157,6 +156,8 @@ namespace InkRealmMVC.Controllers
             return await Task.Run(() => RedirectToAction("Index", "Home"));
         }
 
+
+
         private static bool IsValidModel(MasterRegister master)
         {
             if (string.IsNullOrEmpty(master.Login))
@@ -173,7 +174,19 @@ namespace InkRealmMVC.Controllers
                 return false;
             return true;
         }
-        
+
+        private async Task<string> AddPictureAsync(IFormFile file, string insertPath)
+        {
+            string imageName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+            string picturePath = Path.Combine(Directory.GetCurrentDirectory(), insertPath, imageName);
+            using (Stream fileStream = new FileStream(picturePath, FileMode.Create))
+            {
+                await file.CopyToAsync(fileStream);
+            }
+            return picturePath;
+
+        }
+
         private async Task RegisterNewUser(MasterRegister master)
         {
             var claims = new List<Claim>() {
@@ -184,12 +197,14 @@ namespace InkRealmMVC.Controllers
             ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, "Cookies");
             await ControllerContext.HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
         }
-        private async Task<byte[]> GeneratePasswordAsync(string password, TimeOnly date)
+
+        private byte[] GeneratePassword(string password, TimeOnly date)
         {
             byte[] passBytes = Encoding.ASCII.GetBytes(password);
             byte[] saltBytes = Encoding.ASCII.GetBytes(date.ToString());
             byte[] resToEncrypt = passBytes.Concat(saltBytes).ToArray();
             return sha256.ComputeHash(resToEncrypt);
         }
+
     }
 }

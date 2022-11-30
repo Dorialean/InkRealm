@@ -45,14 +45,4 @@ public partial class InkClient
 
     [Column("registered", TypeName = "timestamp without time zone")]
     public DateTime Registered { get; set; }
-
-    [ForeignKey("ClientNeedsId")]
-    [InverseProperty("InkClients")]
-    public virtual ClientsNeed? ClientNeeds { get; set; }
-
-    [InverseProperty("Client")]
-    public virtual ICollection<ClientsNeed> ClientsNeeds { get; } = new List<ClientsNeed>();
-
-    [InverseProperty("Client")]
-    public virtual ICollection<MasterReview> MasterReviews { get; } = new List<MasterReview>();
 }

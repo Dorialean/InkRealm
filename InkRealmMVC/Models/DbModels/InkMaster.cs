@@ -28,9 +28,6 @@ public partial class InkMaster
     [Column("photo_link")]
     public string? PhotoLink { get; set; }
 
-    [Column("service_id")]
-    public int ServiceId { get; set; }
-
     [Column("experience_years")]
     public int? ExperienceYears { get; set; }
 
@@ -52,21 +49,4 @@ public partial class InkMaster
 
     [Column("ink_post")]
     public string InkPost { get; set; } = null!;
-
-    [InverseProperty("MasterReviewNavigation")]
-    public virtual MasterReview? MasterReviewMasterReviewNavigation { get; set; }
-
-    [InverseProperty("Master")]
-    public virtual ICollection<MasterReview> MasterReviewMasters { get; } = new List<MasterReview>();
-
-    [InverseProperty("Master")]
-    public virtual MastersSupply? MastersSupply { get; set; }
-
-    [ForeignKey("ServiceId")]
-    [InverseProperty("InkMasters")]
-    public virtual InkService Service { get; set; } = null!;
-
-    [ForeignKey("StudioId")]
-    [InverseProperty("InkMasters")]
-    public virtual Studio Studio { get; set; } = null!;
 }

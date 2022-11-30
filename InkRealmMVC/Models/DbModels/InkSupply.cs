@@ -22,7 +22,4 @@ public partial class InkSupply
 
     [Column("price", TypeName = "money")]
     public decimal Price { get; set; }
-
-    [InverseProperty("Supl")]
-    public virtual ICollection<MastersSupply> MastersSupplies { get; } = new List<MastersSupply>();
 }

@@ -18,11 +18,4 @@ public partial class Order
 
     [Column("create_date", TypeName = "timestamp without time zone")]
     public DateTime? CreateDate { get; set; }
-
-    [InverseProperty("Order")]
-    public virtual ICollection<ClientsNeed> ClientsNeeds { get; } = new List<ClientsNeed>();
-
-    [ForeignKey("ProductId")]
-    [InverseProperty("Orders")]
-    public virtual InkProduct? Product { get; set; }
 }

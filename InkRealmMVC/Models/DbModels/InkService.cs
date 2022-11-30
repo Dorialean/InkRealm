@@ -25,10 +25,4 @@ public partial class InkService
 
     [Column("max_price", TypeName = "money")]
     public decimal? MaxPrice { get; set; }
-
-    [InverseProperty("Service")]
-    public virtual ICollection<ClientsNeed> ClientsNeeds { get; } = new List<ClientsNeed>();
-
-    [InverseProperty("Service")]
-    public virtual ICollection<InkMaster> InkMasters { get; } = new List<InkMaster>();
 }

@@ -24,19 +24,4 @@ public partial class ClientsNeed
 
     [Column("order_id")]
     public Guid? OrderId { get; set; }
-
-    [ForeignKey("ClientId")]
-    [InverseProperty("ClientsNeeds")]
-    public virtual InkClient Client { get; set; } = null!;
-
-    [InverseProperty("ClientNeeds")]
-    public virtual ICollection<InkClient> InkClients { get; } = new List<InkClient>();
-
-    [ForeignKey("OrderId")]
-    [InverseProperty("ClientsNeeds")]
-    public virtual Order? Order { get; set; }
-
-    [ForeignKey("ServiceId")]
-    [InverseProperty("ClientsNeeds")]
-    public virtual InkService? Service { get; set; }
 }

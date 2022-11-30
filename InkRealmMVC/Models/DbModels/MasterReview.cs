@@ -24,16 +24,4 @@ public partial class MasterReview
 
     [Column("review")]
     public string? Review { get; set; }
-
-    [ForeignKey("ClientId")]
-    [InverseProperty("MasterReviews")]
-    public virtual InkClient Client { get; set; } = null!;
-
-    [ForeignKey("MasterId")]
-    [InverseProperty("MasterReviewMasters")]
-    public virtual InkMaster Master { get; set; } = null!;
-
-    [ForeignKey("MasterReviewId")]
-    [InverseProperty("MasterReviewMasterReviewNavigation")]
-    public virtual InkMaster MasterReviewNavigation { get; set; } = null!;
 }

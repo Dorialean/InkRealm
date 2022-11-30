@@ -28,7 +28,4 @@ public partial class InkProduct
 
     [Column("photo_link")]
     public string? PhotoLink { get; set; }
-
-    [InverseProperty("Product")]
-    public virtual ICollection<Order> Orders { get; } = new List<Order>();
 }

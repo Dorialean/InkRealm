@@ -17,7 +17,7 @@ namespace InkRealmMVC.Models
         public TimeOnly Registered { get; set; } = TimeOnly.FromDateTime(DateTime.Now);
         public List<string> ServicesTitles { get; set; } = null!;
         public string StudioAddress { get; set; }
-        public int StudioId { get; set; }
+        public Guid StudioId { get; set; }
         public string InkPost { get; set; }
         public List<Studio>? AllStudios { get; set; }
         public List<InkService>? AllServices { get; set; }
