@@ -34,7 +34,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Views\ClientArea\" />
     <Folder Include="wwwroot\img\clients_img\" />
     <Folder Include="wwwroot\img\masters_img\info\" />
     <Folder Include="wwwroot\img\masters_img\works\" />

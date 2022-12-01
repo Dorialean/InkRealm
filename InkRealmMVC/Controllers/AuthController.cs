@@ -6,6 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using Npgsql;
+using NpgsqlTypes;
+using NuGet.Protocol.Plugins;
+using System.Collections;
 using System.Diagnostics.Metrics;
 using System.Security.Claims;
 using System.Security.Cryptography;
@@ -88,7 +91,7 @@ namespace InkRealmMVC.Controllers
                         {master.ExperienceYears},
                         '{master.StudioId}',
                         '{master.Login}',
-                        '{master.EncryptedPassword}',
+                        '{Encoding.UTF8.GetString(master.EncryptedPassword)}',
                         '{master.InkPost}',
                         '{master.Registered}');
                     """;
@@ -97,6 +100,7 @@ namespace InkRealmMVC.Controllers
                     conn.Open();
                     NpgsqlCommand cmd = new(sql, conn);
                     cmd.ExecuteNonQuery();
+
                     int masterId = 0;
                     sql = $""" SELECT master_id FROM ink_masters WHERE login = '{master.Login}' """;
                     cmd = new(sql, conn);
@@ -125,16 +129,49 @@ namespace InkRealmMVC.Controllers
                     }
                 }
             }
-
+            await RegisterNewUser(master);
             return await Task.Run(() =>  RedirectToAction("MasterArea", "MasterAreaController"));
         }
         
         [HttpGet]
         public async Task<IActionResult> ClientRegister() => await Task.Run(View);
         [HttpPost]
-        public IActionResult ClientRegister(InkClient client)
+        public IActionResult ClientRegister(ClientRegister client)
         {
-            return View();
+            if (!IsValidModel(client))
+                return BadRequest("Введены не все данные");
+
+            using (_context)
+            {
+                if (_context.InkClients.FirstOrDefault(c => c.Login == client.Login) != null)
+                    return BadRequest(() => BadRequest("Пользователь с таким логином уже существует!"));
+
+                client.EncryptedPassword = GeneratePassword(client.Password, client.Registered);
+
+                string sql = $"""
+                    INSERT INTO ink_clients(first_name,
+                                            surname,
+                                            father_name,
+                                            mobile_phone,
+                                            email,
+                                            login,
+                                            password) VALUES ('{client.FirstName}',
+                                                            '{client.Surname}',
+                                                            '{client.FatherName}',
+                                                            '{client.MobilePhone}',
+                                                            '{client.Email}',
+                                                            '{client.Login}',
+                                                            '{Encoding.UTF8.GetString(client.EncryptedPassword)}'); 
+                    """;
+
+                using (NpgsqlConnection conn = new(Environment.GetEnvironmentVariable("POSTGRES_CONNECTION_STRING")))
+                {
+                    conn.Open();
+                    NpgsqlCommand cmd = new(sql, conn);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+            return RedirectToAction("ClientArea", "ClientAreaController");
         }
 
         [HttpGet]
@@ -185,6 +222,18 @@ namespace InkRealmMVC.Controllers
                 return false;
             return true;
         }
+        private static bool IsValidModel(ClientRegister client)
+        {
+            if (string.IsNullOrEmpty(client.Login))
+                return false;
+            if (string.IsNullOrEmpty(client.Password))
+                return false;
+            if (string.IsNullOrEmpty(client.FirstName))
+                return false;
+            if (string.IsNullOrEmpty(client.Surname))
+                return false;
+            return true;
+        }
 
         private async Task<string> AddPictureAsync(IFormFile file, string insertPath)
         {
@@ -203,13 +252,27 @@ namespace InkRealmMVC.Controllers
             var claims = new List<Claim>() {
                 new Claim(ClaimTypes.Name, master.Login),
                 new Claim(ClaimTypes.Role, master.InkPost)
-            
             };
             ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, "Cookies");
             await ControllerContext.HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
         }
 
+        private async Task RegisterNewUser(ClientRegister master)
+        {
+            var claims = new List<Claim>() { new Claim(ClaimTypes.Name, master.Login) };
+            ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, "Cookies");
+            await ControllerContext.HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
+        }
+
+
         private byte[] GeneratePassword(string password, TimeOnly date)
+        {
+            byte[] passBytes = Encoding.ASCII.GetBytes(password);
+            byte[] saltBytes = Encoding.ASCII.GetBytes(date.ToString());
+            byte[] resToEncrypt = passBytes.Concat(saltBytes).ToArray();
+            return sha256.ComputeHash(resToEncrypt);
+        }
+        private byte[] GeneratePassword(string password, DateTime date)
         {
             byte[] passBytes = Encoding.ASCII.GetBytes(password);
             byte[] saltBytes = Encoding.ASCII.GetBytes(date.ToString());
