@@ -17,7 +17,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Remove="Views\MasterArea\MasterArea.cshtml" />
+    <Content Remove="Views\MasterArea\Index.cshtml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -40,15 +40,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <UpToDateCheckInput Remove="Views\MasterArea\MasterArea.cshtml" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <_ContentIncludedByDefault Remove="Views\MasterArea\MasterArea.cshtml" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="Views\MasterArea\MasterArea.cshtml" />
+    <None Include="Views\MasterArea\Index.cshtml" />
   </ItemGroup>
 
 </Project>

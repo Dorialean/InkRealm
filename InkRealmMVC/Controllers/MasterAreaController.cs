@@ -6,6 +6,6 @@ namespace InkRealmMVC.Controllers
     public class MasterAreaController : Controller
     {
         [Authorize]
-        public IActionResult MasterArea() { return View(); }
+        public IActionResult Index() => View();
     }
 }

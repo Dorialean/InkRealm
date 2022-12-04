@@ -37,7 +37,7 @@ namespace InkRealmMVC.Controllers
             List<Studio> allStudios;
             List<InkService> allInkServices;
             List<InkSupply> allInkSupplies;
-            string[] profs = new string[] { "sketch designer", "tatoo master", "pirsing master" };
+            string[] profs = new string[] { "sketch designer", "tatoo login", "pirsing login" };
 
             using (_context)
             {
@@ -134,10 +134,8 @@ namespace InkRealmMVC.Controllers
                     
                 }
             }
-
             await RegisterNewUser(master);
-
-            return await Task.Run(() =>  RedirectToAction("MasterArea", "MasterAreaController"));
+            return await Task.Run(() =>  RedirectToAction("Index", "MasterArea"));
         }
         
         [HttpGet]
@@ -174,8 +172,8 @@ namespace InkRealmMVC.Controllers
                 };
                 await cmd.ExecuteNonQueryAsync();
             }
-
-            return await Task.Run(() => RedirectToAction("ClientArea", "ClientAreaController"));
+            await RegisterNewUser(client);
+            return await Task.Run(() => RedirectToAction("Index", "ClientArea"));
         }
 
         [HttpGet]
@@ -264,7 +262,14 @@ namespace InkRealmMVC.Controllers
         private async Task RegisterNewUser(ClientRegister master)
         {
             var claims = new List<Claim>() { new Claim(ClaimTypes.Name, master.Login) };
-            ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, "Cookies");
+            ClaimsIdentity claimsIdentity = new(claims, "Cookies");
+            await ControllerContext.HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
+        }
+
+        private async Task RegisterNewUser(LoginModel login)
+        {
+            var claims = new List<Claim>() { new Claim(ClaimTypes.Name, login.Login) };
+            ClaimsIdentity claimsIdentity = new(claims, "Cookies");
             await ControllerContext.HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
         }
 

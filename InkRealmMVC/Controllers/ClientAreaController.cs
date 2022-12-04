@@ -6,9 +6,6 @@ namespace InkRealmMVC.Controllers
     public class ClientAreaController : Controller
     {
         [Authorize]
-        public IActionResult ClientArea()
-        {
-            return View();
-        }   
+        public IActionResult Index() => View();   
     }
 }
