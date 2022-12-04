@@ -186,18 +186,26 @@ namespace InkRealmMVC.Controllers
             {
                 if (_context.InkMasters.First(m => m.Login == loginInfo.Login) != null)
                 {
-                    //Method
+                    var master = _context.InkMasters.First(m => m.Login == loginInfo.Login);
+                    if (master.Password == GeneratePassword(loginInfo.Password, master.Registered)) 
+                    {
+                        RegisterNewUser(loginInfo, Roles.InkWorker);
+                        return RedirectToAction("Index", "MasterArea");
+                    }
                 }
                 else if(_context.InkClients.First(c => c.Login == loginInfo.Login) != null)
                 {
-                    //Method
+                    var client = _context.InkClients.First(c => c.Login == loginInfo.Login);
+                    if (client.Password == GeneratePassword(loginInfo.Password, client.Registered))
+                    {
+                        RegisterNewUser(loginInfo, Roles.InkClient);
+                        return RedirectToAction("Index", "ClientArea");
+                    }
                 }
                 else
-                {
                     return RedirectToAction("ClientRegister", "Auth");
-                }
             }
-            return View();
+            return BadRequest("Не получилось подключиться к базе данных");
         }
 
         public async Task<IActionResult> Logout()
@@ -205,7 +213,6 @@ namespace InkRealmMVC.Controllers
             await ControllerContext.HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return await Task.Run(() => RedirectToAction("Index", "Home"));
         }
-
 
 
         private static bool IsValidModel(MasterRegister master)
@@ -253,22 +260,30 @@ namespace InkRealmMVC.Controllers
         {
             var claims = new List<Claim>() {
                 new Claim(ClaimTypes.Name, master.Login),
-                new Claim(ClaimTypes.Role, master.InkPost)
+                new Claim(ClaimTypes.Role, Roles.InkWorker)
             };
             ClaimsIdentity claimsIdentity = new(claims, "Cookies");
             await ControllerContext.HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
         }
 
-        private async Task RegisterNewUser(ClientRegister master)
+        private async Task RegisterNewUser(ClientRegister client)
         {
-            var claims = new List<Claim>() { new Claim(ClaimTypes.Name, master.Login) };
+            var claims = new List<Claim>() 
+            { 
+                new Claim(ClaimTypes.Name, client.Login),
+                new Claim(ClaimTypes.Role, Roles.InkClient)
+            };
             ClaimsIdentity claimsIdentity = new(claims, "Cookies");
             await ControllerContext.HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
         }
 
-        private async Task RegisterNewUser(LoginModel login)
+        private async Task RegisterNewUser(LoginModel login, string r)
         {
-            var claims = new List<Claim>() { new Claim(ClaimTypes.Name, login.Login) };
+            var claims = new List<Claim>() 
+            {
+                new Claim(ClaimTypes.Name, login.Login),
+                new Claim(ClaimTypes.Role, r)
+            };
             ClaimsIdentity claimsIdentity = new(claims, "Cookies");
             await ControllerContext.HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
         }
