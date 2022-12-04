@@ -17,6 +17,7 @@ public partial class MasterReview
     public int ClientId { get; set; }
 
     [Column("master_id")]
+    [Required]
     public int MasterId { get; set; }
 
     [Column("rating")]

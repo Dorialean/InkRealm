@@ -6,7 +6,11 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
 string? connString = Environment.GetEnvironmentVariable("POSTGRES_CONNECTION_STRING");
-builder.Services.AddDbContext<InkRealmContext>(options => options.UseNpgsql(connString));
+builder.Services.AddDbContext<InkRealmContext>(options => 
+    {
+        options.UseNpgsql(connString);
+        options.EnableSensitiveDataLogging();
+    });
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options => 
     { 

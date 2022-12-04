@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using InkRealmMVC.Migrations;
 using Microsoft.EntityFrameworkCore;
+using Npgsql;
 
 namespace InkRealmMVC.Models.DbModels;
 
 public partial class InkRealmContext : DbContext
 {
+
     public InkRealmContext()
     {
     }
@@ -30,6 +33,8 @@ public partial class InkRealmContext : DbContext
     public virtual DbSet<MasterReview> MasterReviews { get; set; }
 
     public virtual DbSet<MastersSupply> MastersSupplies { get; set; }
+
+    public virtual DbSet<MastersServices> MastersServices { get; set; }
 
     public virtual DbSet<Order> Orders { get; set; }
 

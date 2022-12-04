@@ -15,9 +15,11 @@ public partial class InkService
 
     [Column("title")]
     [StringLength(80)]
+    [Required]
     public string Title { get; set; } = null!;
 
     [Column("description")]
+    [Required]
     public string Description { get; set; } = null!;
 
     [Column("min_price", TypeName = "money")]

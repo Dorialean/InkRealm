@@ -15,10 +15,12 @@ public partial class InkClient
 
     [Column("first_name")]
     [StringLength(30)]
+    [Required]
     public string FirstName { get; set; } = null!;
 
     [Column("surname")]
     [StringLength(30)]
+    [Required]
     public string Surname { get; set; } = null!;
 
     [Column("father_name")]
@@ -35,9 +37,11 @@ public partial class InkClient
 
     [Column("login")]
     [StringLength(50)]
+    [Required]
     public string Login { get; set; } = null!;
 
     [Column("password")]
+    [Required]
     public byte[] Password { get; set; } = null!;
 
     [Column("registered", TypeName = "timestamp without time zone")]

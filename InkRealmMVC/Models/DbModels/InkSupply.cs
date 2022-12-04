@@ -15,9 +15,11 @@ public partial class InkSupply
 
     [Column("title")]
     [StringLength(40)]
+    [Required]
     public string Title { get; set; } = null!;
 
     [Column("description")]
+    [Required]
     public string Description { get; set; } = null!;
 
     [Column("price", TypeName = "money")]

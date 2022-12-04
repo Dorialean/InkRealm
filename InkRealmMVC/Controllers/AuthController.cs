@@ -60,6 +60,10 @@ namespace InkRealmMVC.Controllers
             if (!IsValidModel(master))
                 return await Task.Run(() => BadRequest("Введены не все данные"));
 
+            int masterId = 0;
+            List<InkService> masterChoosedServices = new();
+            List<InkSupply> masterChoosedSupplies = new();
+
             if (master.Photo != null)
             {
                 var file = master.Photo;
@@ -71,107 +75,107 @@ namespace InkRealmMVC.Controllers
                 if (await _context.InkMasters.FirstOrDefaultAsync(m => m.Login == master.Login) != null)
                     return await Task.Run(() => BadRequest("Пользователь с таким логином уже существует"));
 
-                master.EncryptedPassword = GeneratePassword(master.Password, master.Registered);
                 master.StudioId = _context.Studios.First(s => s.Address == master.StudioAddress).StudioId;
+                master.EncryptedPassword = GeneratePassword(master.Password, master.Registered);
 
-                string sql = $"""
-                    INSERT INTO ink_masters(first_name, 
-                        second_name, 
-                        father_name, 
-                        photo_link, 
-                        experience_years,  
-                        studio_id, 
-                        login, 
-                        password, 
-                        ink_post,
-                        registered) VALUES ('{master.FirstName}',
-                        '{master.SecondName}',
-                        '{master.FatherName}',
-                        '{master.PhotoLink}',
-                        {master.ExperienceYears},
-                        '{master.StudioId}',
-                        '{master.Login}',
-                        '{Encoding.UTF8.GetString(master.EncryptedPassword)}',
-                        '{master.InkPost}',
-                        '{master.Registered}');
-                    """;
+                await _context.InkMasters.AddAsync(new InkMaster()
+                {
+                    Login = master.Login,
+                    Password = master.EncryptedPassword,
+                    FirstName = master.FirstName,
+                    SecondName = master.SecondName,
+                    FatherName = master.FatherName ?? string.Empty,
+                    PhotoLink = master.PhotoLink ?? string.Empty,
+                    StudioId = master.StudioId,
+                    InkPost = master.InkPost,
+                    Registered = master.Registered
+                });
+
+                await _context.SaveChangesAsync();
+
+                masterId = _context.InkMasters.FirstOrDefault(m => m.Login == master.Login).MasterId;
+                masterChoosedServices = await _context.InkServices.Select(s => s).Where(s => master.ServicesTitles.Any(t => t == s.Title)).ToListAsync();
+                masterChoosedSupplies = await _context.InkSupplies.Select(s => s).Where(s => master.SuppliesTitles.Any(t => t == s.Title)).ToListAsync();
+            }
+
+            if (masterId != 0)
+            {
                 using (NpgsqlConnection conn = new(Environment.GetEnvironmentVariable("POSTGRES_CONNECTION_STRING")))
                 {
-                    conn.Open();
-                    NpgsqlCommand cmd = new(sql, conn);
-                    cmd.ExecuteNonQuery();
-
-                    int masterId = 0;
-                    sql = $""" SELECT master_id FROM ink_masters WHERE login = '{master.Login}' """;
-                    cmd = new(sql, conn);
-                    var res = await cmd.ExecuteScalarAsync();
-
-                    if (res != null)
+                    await conn.OpenAsync();
+                    string query = "INSERT INTO masters_services(master_id, service_id) VALUES ($1, $2)";
+                    foreach (int servId in masterChoosedServices.Select(s => s.ServiceId).ToArray())
                     {
-                        int.TryParse(res.ToString(),out masterId);
+                        NpgsqlCommand cmd = new(query, conn)
+                        {
+                            Parameters =
+                            {
+                                new(){ Value = masterId},
+                                new(){ Value = servId }
+                            }
+                        };
+                        await cmd.ExecuteNonQueryAsync();
                     }
-
-                    if (masterId != 0)
+                    //TODO:Добавить возможность юзеру выбрать количество
+                    query = "INSERT INTO masters_supplies(master_id, supl_id, amount) VALUES ($1, $2, $3)";
+                    foreach (Guid suplId in masterChoosedSupplies.Select(s => s.SuplId).ToArray())
                     {
-                        foreach (string serviceTitle in master.ServicesTitles)
+                        NpgsqlCommand cmd = new(query, conn)
                         {
-                            sql = $"""INSERT INTO masters_services(master_id, service_id) VALUES ({masterId}, {_context.InkServices.First(s => s.Title == serviceTitle).ServiceId});""";
-                            cmd = new(sql, conn);
-                            await cmd.ExecuteNonQueryAsync();
-                        }
-
-                        foreach (string supplyTitle in master.SuppliesTitles)
-                        {
-                            sql = $"""INSERT INTO masters_supplies(master_id, supl_id, amount) VALUES ({masterId}, {_context.InkSupplies.First(s => s.Title == supplyTitle).SuplId, 1});""";
-                            cmd = new(sql, conn);
-                            await cmd.ExecuteNonQueryAsync();
-                        }
+                            Parameters =
+                            {
+                                new(){ Value = masterId},
+                                new(){ Value = suplId },
+                                new(){ Value = 1 }
+                            }
+                        };
+                        await cmd.ExecuteNonQueryAsync();
                     }
+                    
                 }
             }
+
             await RegisterNewUser(master);
+
             return await Task.Run(() =>  RedirectToAction("MasterArea", "MasterAreaController"));
         }
         
         [HttpGet]
         public async Task<IActionResult> ClientRegister() => await Task.Run(View);
         [HttpPost]
-        public IActionResult ClientRegister(ClientRegister client)
+        public async Task<IActionResult> ClientRegister(ClientRegister client)
         {
             if (!IsValidModel(client))
-                return BadRequest("Введены не все данные");
+                return await Task.Run(() => BadRequest("Введены не все данные"));
 
             using (_context)
             {
-                if (_context.InkClients.FirstOrDefault(c => c.Login == client.Login) != null)
-                    return BadRequest(() => BadRequest("Пользователь с таким логином уже существует!"));
-
-                client.EncryptedPassword = GeneratePassword(client.Password, client.Registered);
-
-                string sql = $"""
-                    INSERT INTO ink_clients(first_name,
-                                            surname,
-                                            father_name,
-                                            mobile_phone,
-                                            email,
-                                            login,
-                                            password) VALUES ('{client.FirstName}',
-                                                            '{client.Surname}',
-                                                            '{client.FatherName}',
-                                                            '{client.MobilePhone}',
-                                                            '{client.Email}',
-                                                            '{client.Login}',
-                                                            '{Encoding.UTF8.GetString(client.EncryptedPassword)}'); 
-                    """;
-
-                using (NpgsqlConnection conn = new(Environment.GetEnvironmentVariable("POSTGRES_CONNECTION_STRING")))
-                {
-                    conn.Open();
-                    NpgsqlCommand cmd = new(sql, conn);
-                    cmd.ExecuteNonQuery();
-                }
+                if (await _context.InkClients.FirstOrDefaultAsync(c => c.Login == client.Login) != null)
+                    return await Task.Run(() => BadRequest("Пользователь с таким логином уже существует!"));
             }
-            return RedirectToAction("ClientArea", "ClientAreaController");
+
+            client.EncryptedPassword = GeneratePassword(client.Password, client.Registered);
+            using (NpgsqlConnection conn = new(Environment.GetEnvironmentVariable("POSTGRES_CONNECTION_STRING")))
+            {
+                string sql = "INSERT INTO ink_clients(first_name,surname,father_name,mobile_phone,email,login,password) VALUES ($1,$2,$3,$4,$5,$6,$7)";
+                await conn.OpenAsync();
+                await using NpgsqlCommand cmd = new(sql, conn)
+                {
+                    Parameters =
+                    {
+                        new(){ Value=client.FirstName},
+                        new(){ Value=client.Surname},
+                        new(){ Value=client.FatherName?? string.Empty },
+                        new(){ Value=client.MobilePhone},
+                        new(){ Value=client.Email},
+                        new(){ Value=client.Login},
+                        new(){ Value=client.EncryptedPassword}
+                    }
+                };
+                await cmd.ExecuteNonQueryAsync();
+            }
+
+            return await Task.Run(() => RedirectToAction("ClientArea", "ClientAreaController"));
         }
 
         [HttpGet]
@@ -253,7 +257,7 @@ namespace InkRealmMVC.Controllers
                 new Claim(ClaimTypes.Name, master.Login),
                 new Claim(ClaimTypes.Role, master.InkPost)
             };
-            ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, "Cookies");
+            ClaimsIdentity claimsIdentity = new(claims, "Cookies");
             await ControllerContext.HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
         }
 

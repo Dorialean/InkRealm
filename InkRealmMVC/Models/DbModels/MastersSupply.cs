@@ -11,9 +11,11 @@ public partial class MastersSupply
 {
     [Key]
     [Column("master_id")]
+    [Required]
     public int MasterId { get; set; }
 
     [Column("supl_id")]
+    [Required]
     public Guid? SuplId { get; set; }
 
     [Column("amount")]

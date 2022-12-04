@@ -15,6 +15,7 @@ public partial class InkProduct
 
     [Column("title")]
     [StringLength(50)]
+    [Required]
     public string Title { get; set; } = null!;
 
     [Column("description")]

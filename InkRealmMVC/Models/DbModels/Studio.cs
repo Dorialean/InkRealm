@@ -14,6 +14,7 @@ public partial class Studio
     public Guid StudioId { get; set; }
 
     [Column("address")]
+    [Required]
     public string Address { get; set; } = null!;
 
     [Column("rental_price_per_month", TypeName = "money")]

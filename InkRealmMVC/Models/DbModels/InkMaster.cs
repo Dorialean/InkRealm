@@ -15,10 +15,12 @@ public partial class InkMaster
 
     [Column("first_name")]
     [StringLength(30)]
+    [Required]
     public string FirstName { get; set; } = null!;
 
     [Column("second_name")]
     [StringLength(30)]
+    [Required]
     public string SecondName { get; set; } = null!;
 
     [Column("father_name")]
@@ -35,18 +37,22 @@ public partial class InkMaster
     public string? OtherInfo { get; set; }
 
     [Column("studio_id")]
+    [Required]
     public Guid StudioId { get; set; }
 
     [Column("login")]
     [StringLength(50)]
+    [Required]
     public string Login { get; set; } = null!;
 
     [Column("password")]
+    [Required]
     public byte[] Password { get; set; } = null!;
 
     [Column("registered")]
     public TimeOnly Registered { get; set; } = TimeOnly.FromDateTime(DateTime.Now);
 
     [Column("ink_post")]
+    [Required]
     public string InkPost { get; set; } = null!;
 }
