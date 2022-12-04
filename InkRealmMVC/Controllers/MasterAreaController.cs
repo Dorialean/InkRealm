@@ -5,7 +5,7 @@ namespace InkRealmMVC.Controllers
 {
     public class MasterAreaController : Controller
     {
-        [Authorize]
+        [Authorize(Roles = "Worker")]
         public IActionResult Index() => View();
     }
 }

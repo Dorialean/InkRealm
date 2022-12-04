@@ -1,11 +1,12 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using InkRealmMVC.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InkRealmMVC.Controllers
 {
     public class ClientAreaController : Controller
     {
-        [Authorize]
+        [Authorize(Roles = "Client")]
         public IActionResult Index() => View();   
     }
 }
