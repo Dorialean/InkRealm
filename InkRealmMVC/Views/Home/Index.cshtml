@@ -17,7 +17,7 @@
     </span>
 </p>
 
-<span class="row fs-3 text-center"> Мы предоставляем такие услуги:</span>
+<span class="row fs-3 mb-3 "> Мы предоставляем такие услуги:</span>
 <ul class="list-group list-group-horizontal">
     @foreach (InkService service in Model.InkServices)
     {
@@ -39,6 +39,24 @@
                         }
                     </div>
                 </div>
+            </div>
+        </li>
+    }
+</ul>
+
+<span class="row fs-3 mt-5 mb-3 ">Наши студии:</span>
+<ul class="list-group list-group-horizontal">
+    @{
+        int studPhotCounter = 0;
+    }
+    @foreach (Studio stud in Model.AllStudios)
+    {
+        studPhotCounter++;
+        <li class="border border-info border-3 list-group-item me-3 card col-lg-4 col-md-4 col-sm-6">
+            <img class="card-img-top" src=@string.Concat("/img/studios_img/sallon", studPhotCounter,".png") />
+            <div class="card-body text-wrap">
+                <img class="card-img" src="~/img/app_img/map-icon.png" style="max-width:20px;max-height:20px;"/>
+                <a class="card-text btn-link gulag-text" href="#">@stud.Address</a>
             </div>
         </li>
     }

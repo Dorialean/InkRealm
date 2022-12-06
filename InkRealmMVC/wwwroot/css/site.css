@@ -28,6 +28,11 @@ html {
     src: url(/fonts/MultiroundPro.otf);
 }
 
+@font-face {
+    font-family: "GULAGPavlenko";
+    src: url('/fonts/GULAGPavlenko.otf');
+}
+
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
   box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
@@ -56,6 +61,10 @@ body {
 
 .multiround-text{
     font-family: MultiRoundPro;
+}
+
+.gulag-text {
+    font-family: GULAGPavlenko;
 }
 
 
