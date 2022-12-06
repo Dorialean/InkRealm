@@ -21,4 +21,7 @@ public partial class ClientsNeed
 
     [Column("order_id")]
     public Guid? OrderId { get; set; }
+
+    [Column("master_id")]
+    public int? MasterId { get; set; }
 }

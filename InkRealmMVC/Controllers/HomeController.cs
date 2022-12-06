@@ -23,8 +23,8 @@ namespace InkRealmMVC.Controllers
             List<InkProduct> products = new();
             List<InkMaster> masters = new();
             //Вот здесь нужно будет сделать вьху под обе штуки
-            Dictionary<InkMaster, List<MasterServices>>? masterToReviews = new();
-            Dictionary<InkMaster, List<MasterServices>>? masterToServices = new();
+            Dictionary<InkMaster, List<MasterReviews>>? masterToReviews = new();
+            Dictionary<InkMaster, List<MasterReviews>>? masterToServices = new();
             List<Studio> studios = new();
 
             using (_context)
