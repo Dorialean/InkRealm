@@ -1,0 +1,6 @@
+﻿.horiz-scrolls {
+    overflow-x: scroll;
+    overflow-y: hidden;
+    height: 80px;
+    white-space: nowrap;
+}

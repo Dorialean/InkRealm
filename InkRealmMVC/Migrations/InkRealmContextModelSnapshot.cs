@@ -73,7 +73,7 @@ namespace InkRealmMVC.Migrations
                         .HasColumnType("character varying(30)")
                         .HasColumnName("first_name");
 
-                    b.Property<string>("Login")
+                    b.Property<string>("Auth")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)")
@@ -133,7 +133,7 @@ namespace InkRealmMVC.Migrations
                         .HasColumnType("text")
                         .HasColumnName("ink_post");
 
-                    b.Property<string>("Login")
+                    b.Property<string>("Auth")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)")
@@ -152,8 +152,8 @@ namespace InkRealmMVC.Migrations
                         .HasColumnType("text")
                         .HasColumnName("photo_link");
 
-                    b.Property<TimeOnly>("Registered")
-                        .HasColumnType("time without time zone")
+                    b.Property<DateTime>("Registered")
+                        .HasColumnType("timestamp without time zone")
                         .HasColumnName("registered");
 
                     b.Property<string>("SecondName")
@@ -295,25 +295,33 @@ namespace InkRealmMVC.Migrations
                     b.ToTable("master_reviews");
                 });
 
-            modelBuilder.Entity("InkRealmMVC.Models.DbModels.MastersSupply", b =>
+            modelBuilder.Entity("InkRealmMVC.Models.DbModels.MastersServices", b =>
                 {
                     b.Property<int>("MasterId")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
                         .HasColumnName("master_id");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("MasterId"));
+                    b.Property<int>("ServiceId")
+                        .HasColumnType("integer")
+                        .HasColumnName("service_id");
 
+                    b.ToTable("masters_services");
+                });
+
+            modelBuilder.Entity("InkRealmMVC.Models.DbModels.MastersSupply", b =>
+                {
                     b.Property<int?>("Amount")
                         .HasColumnType("integer")
                         .HasColumnName("amount");
+
+                    b.Property<int>("MasterId")
+                        .HasColumnType("integer")
+                        .HasColumnName("master_id");
 
                     b.Property<Guid?>("SuplId")
                         .IsRequired()
                         .HasColumnType("uuid")
                         .HasColumnName("supl_id");
-
-                    b.HasKey("MasterId");
 
                     b.ToTable("masters_supplies");
                 });

@@ -7,9 +7,9 @@ using Microsoft.EntityFrameworkCore;
 namespace InkRealmMVC.Models.DbModels;
 
 [Table("masters_supplies")]
+[Keyless]
 public partial class MastersSupply
 {
-    [Key]
     [Column("master_id")]
     [Required]
     public int MasterId { get; set; }

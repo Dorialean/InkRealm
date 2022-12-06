@@ -1,5 +1,6 @@
 ﻿using InkRealmMVC.Models.DbModels;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,15 +10,14 @@ string? connString = Environment.GetEnvironmentVariable("POSTGRES_CONNECTION_STR
 builder.Services.AddDbContext<InkRealmContext>(options => 
     {
         options.UseNpgsql(connString);
-        options.EnableSensitiveDataLogging();
     });
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options => 
     { 
-        options.LoginPath = "/Auth/Login";
-        options.LogoutPath = "/Auth/Logout";
+        options.LoginPath = "/Verification/Auth";
+        options.LogoutPath = "/Verification/Logout";
+        options.AccessDeniedPath = "/";
     });
-builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
@@ -32,11 +32,12 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-app.UseAuthorization();
 app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}");
+
 
 app.Run();

@@ -82,7 +82,7 @@ namespace InkRealmMVC.Migrations
                         .HasColumnType("character varying(30)")
                         .HasColumnName("first_name");
 
-                    b.Property<string>("Login")
+                    b.Property<string>("Auth")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)")
@@ -142,7 +142,7 @@ namespace InkRealmMVC.Migrations
                         .HasColumnType("text")
                         .HasColumnName("ink_post");
 
-                    b.Property<string>("Login")
+                    b.Property<string>("Auth")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)")

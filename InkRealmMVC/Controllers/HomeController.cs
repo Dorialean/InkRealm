@@ -15,15 +15,46 @@ namespace InkRealmMVC.Controllers
         {
             _context = context;
         }
+        [HttpGet]
+        public IActionResult Index()
+        {
+            InkClient? inkClient = null;
+            List<InkService> services = new();
+            List<InkProduct> products = new();
+            List<InkMaster> masters = new();
+            //Вот здесь нужно будет сделать вьху под обе штуки
+            Dictionary<InkMaster, List<MasterServices>>? masterToReviews = new();
+            Dictionary<InkMaster, List<MasterServices>>? masterToServices = new();
+            List<Studio> studios = new();
 
+            using (_context)
+            {
+                if (User.IsInRole(Role.InkClient))
+                    inkClient = _context.InkClients.First(c => c.Login == User.Identity.Name);
+                services = _context.InkServices.ToList();
+                products = _context.InkProducts.ToList();
+                masters = _context.InkMasters.ToList();
+                studios = _context.Studios.ToList();
+            }
+
+            return View(new HomeModel()
+            {
+                Client = inkClient,
+                InkServices = services,
+                InkProducts = products,
+                AllMasters = masters,
+                MasterToReviews = masterToReviews,
+                MasterToServices = masterToServices,
+                AllStudios = studios
+            });
+        }
+
+        /*
         public async Task<IActionResult> Index()
         {
            return await Task.Run(View);
         }
-        [Authorize]
-        public async Task<IActionResult> MasterIndex(InkMaster master) => await Task.Run(() => View(master));
-        [Authorize]
-        public async Task<IActionResult> ClientIndex(InkClient client) => await Task.Run(() => View(client));
+        */
 
         public async Task<IActionResult> Privacy() => await Task.Run(View);
 

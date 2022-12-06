@@ -49,8 +49,8 @@ public partial class InkMaster
     [Required]
     public byte[] Password { get; set; } = null!;
 
-    [Column("registered")]
-    public TimeOnly Registered { get; set; } = TimeOnly.FromDateTime(DateTime.Now);
+    [Column("registered", TypeName = "timestamp without time zone")]
+    public DateTime Registered { get; set; } = DateTime.Now;
 
     [Column("ink_post")]
     [Required]

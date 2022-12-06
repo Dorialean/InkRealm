@@ -16,7 +16,7 @@ using System.Text;
 
 namespace InkRealmMVC.Controllers
 {
-    public class AuthController : Controller
+    public class VerificationController : Controller
     {
         private readonly InkRealmContext _context;
         private readonly SHA256 sha256 = SHA256.Create();
@@ -25,7 +25,7 @@ namespace InkRealmMVC.Controllers
         const string MASTER_PICTURE_WORK_PATH = "wwwroot/img/masters_img/works";
         const string CLIENT_PICTURE_PATH = "wwwroot/img/clients_img";
 
-        public AuthController(InkRealmContext context)
+        public VerificationController(InkRealmContext context)
         {
             _context = context;
         }
@@ -177,35 +177,47 @@ namespace InkRealmMVC.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Login()  => await Task.Run(View);
+        public IActionResult Auth() 
+        {
+            if (User.IsInRole(Role.InkWorker))
+                return RedirectToAction("Index", "Master");
+            else if(User.IsInRole(Role.InkClient))
+                return RedirectToAction("Index", "Client");
+            else
+                return View();
+        }
 
         [HttpPost]
-        public IActionResult Login(LoginModel loginInfo)
+        public async Task<IActionResult> Auth(LoginModel loginInfo)
         {
-            using (_context)
+            using (_context) 
             {
-                if (_context.InkMasters.First(m => m.Login == loginInfo.Login) != null)
+                if (await _context.InkMasters.FirstAsync(m => m.Login == loginInfo.Login) != null)
                 {
-                    var master = _context.InkMasters.First(m => m.Login == loginInfo.Login);
-                    if (master.Password == GeneratePassword(loginInfo.Password, master.Registered)) 
+                    var master = await _context.InkMasters.FirstAsync(m => m.Login == loginInfo.Login);
+                    byte[] genPass = GeneratePassword(loginInfo.Password, master.Registered);
+                    if (master.Password.SequenceEqual(genPass))
                     {
-                        RegisterNewUser(loginInfo, Roles.InkWorker);
-                        return RedirectToAction("Index", "MasterArea");
+                        await RegisterNewUser(loginInfo, Role.InkWorker);
+                        return await Task.Run(() => RedirectToAction("Index", "Home"));
                     }
+                    else
+                        return await Task.Run(() => BadRequest("Нерпавильный пароль"));
                 }
-                else if(_context.InkClients.First(c => c.Login == loginInfo.Login) != null)
+                else if (await _context.InkClients.FirstAsync(c => c.Login == loginInfo.Login) != null)
                 {
-                    var client = _context.InkClients.First(c => c.Login == loginInfo.Login);
-                    if (client.Password == GeneratePassword(loginInfo.Password, client.Registered))
+                    var client = await _context.InkClients.FirstAsync(c => c.Login == loginInfo.Login);
+                    if (client.Password.SequenceEqual(GeneratePassword(loginInfo.Password, client.Registered)))
                     {
-                        RegisterNewUser(loginInfo, Roles.InkClient);
-                        return RedirectToAction("Index", "ClientArea");
+                        await RegisterNewUser(loginInfo, Role.InkClient);
+                        return await Task.Run(() => RedirectToAction("Index", "Home"));
                     }
+                    else
+                        return await Task.Run(() => BadRequest("Неправильный пароль"));
                 }
                 else
-                    return RedirectToAction("ClientRegister", "Auth");
+                    return await Task.Run(() => RedirectToAction("ClientRegister"));
             }
-            return BadRequest("Не получилось подключиться к базе данных");
         }
 
         public async Task<IActionResult> Logout()
@@ -244,7 +256,7 @@ namespace InkRealmMVC.Controllers
             return true;
         }
 
-        private async Task<string> AddPictureAsync(IFormFile file, string insertPath)
+        private static async Task<string> AddPictureAsync(IFormFile file, string insertPath)
         {
             string imageName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
             string picturePath = Path.Combine(Directory.GetCurrentDirectory(), insertPath, imageName);
@@ -260,7 +272,7 @@ namespace InkRealmMVC.Controllers
         {
             var claims = new List<Claim>() {
                 new Claim(ClaimTypes.Name, master.Login),
-                new Claim(ClaimTypes.Role, Roles.InkWorker)
+                new Claim(ClaimTypes.Role, Role.InkWorker)
             };
             ClaimsIdentity claimsIdentity = new(claims, "Cookies");
             await ControllerContext.HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
@@ -271,7 +283,7 @@ namespace InkRealmMVC.Controllers
             var claims = new List<Claim>() 
             { 
                 new Claim(ClaimTypes.Name, client.Login),
-                new Claim(ClaimTypes.Role, Roles.InkClient)
+                new Claim(ClaimTypes.Role, Role.InkClient)
             };
             ClaimsIdentity claimsIdentity = new(claims, "Cookies");
             await ControllerContext.HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
@@ -289,13 +301,22 @@ namespace InkRealmMVC.Controllers
         }
 
 
-        private byte[] GeneratePassword(string password, TimeOnly date)
+        private byte[] GeneratePassword(string password, TimeOnly time)
         {
             byte[] passBytes = Encoding.ASCII.GetBytes(password);
-            byte[] saltBytes = Encoding.ASCII.GetBytes(date.ToString());
+            byte[] saltBytes = Encoding.ASCII.GetBytes(time.ToString());
             byte[] resToEncrypt = passBytes.Concat(saltBytes).ToArray();
             return sha256.ComputeHash(resToEncrypt);
         }
+
+        private byte[] GeneratePassword(string password, string time)
+        {
+            byte[] passBytes = Encoding.ASCII.GetBytes(password);
+            byte[] saltBytes = Encoding.ASCII.GetBytes(time);
+            byte[] resToEncrypt = passBytes.Concat(saltBytes).ToArray();
+            return sha256.ComputeHash(resToEncrypt);
+        }
+
         private byte[] GeneratePassword(string password, DateTime date)
         {
             byte[] passBytes = Encoding.ASCII.GetBytes(password);

@@ -1,3 +1,53 @@
-﻿@{
+﻿@using InkRealmMVC.Models.DbModels;
+@model HomeModel
+@{
     ViewData["Title"] = "Home Page";
+
 }
+
+<h1 class="row mt-2 mb-3">
+    <span class=" ms-5 street-text text-nowarap col-lg-2 col-md-1 col-sm-1 me-0">Ink Realm</span>
+    <span class=" mt-2 ms-3 col fs-2 fw-lighter">приветствует тебя!</span>
+</h1>
+
+<p class="row mt-2 mb-3 pb-3 text-wrap border rounded border-4">
+    <strong class="ms-0 fs-3">Татуирование</strong>
+    <span class="ms-4 fw-normal">
+        — процесс нанесения перманентного (стойкого, постоянного) рисунка на тело, выполняемого методом местного травмирования кожного покрова с внесением в дерму красящего пигмента. Cами узоры на теле, сделанные таким способом.Процесс относится к декоративным модификациям тела. Как правило, татуировка и её вид определяются самим заказчиком, либо условиями быта и социума. В древности места нанесения татуировок имели важнейшее значение, определяли классовую разность населения. Татуировка носит характерные отличительные черты, подразделяясь на виды, стили и способы изготовления. Человек, наносящий татуировку, носит название: татуировщик, кольщик, мастер татуировки, тату-мастер, тату-художник, тату-артист.
+    </span>
+</p>
+
+<span class="row fs-3 text-center"> Мы предоставляем такие услуги:</span>
+<ul class="list-group list-group-horizontal">
+    @foreach (InkService service in Model.InkServices)
+    {
+        <li class="border border-info border-3 list-group-item me-3 card col-lg-3 col-md-4 col-sm-6">
+            <div class="card-body text-wrap">
+                <div class="card-title">
+                    <strong class="fs-5 multiround-text">@service.Title.ToUpper()</strong>
+                </div>
+                <div class="card-text">
+                    <p class="row">@service.Description</p>
+                    <div class="row">
+                        @if(service.MinPrice > 0)
+                        {
+                            <p class="rounded border-2 border border-success text-success">Минимальная цена: <strong>@service.MinPrice.ToString("#") ₽</strong> </p>    
+                        }
+                        @if (service.MaxPrice != null && service.MaxPrice > 0)
+                        {
+                            <p class="rounded border-2 border border-success text-success">Максимальная цена:<strong>@service.MaxPrice?.ToString("#") ₽</strong></p>
+                        }
+                    </div>
+                </div>
+            </div>
+        </li>
+    }
+</ul>
+
+
+
+
+@section Scripts{
+    <link rel="stylesheet" href="~/css/home.css" asp-append-version="true" />
+}
+

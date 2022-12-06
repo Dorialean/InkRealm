@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace InkRealmMVC.Migrations
 {
     [DbContext(typeof(InkRealmContext))]
-    [Migration("20221130164105_NoClientNeedsRelation")]
-    partial class NoClientNeedsRelation
+    [Migration("20221206093647_NoPKeyOnMastersUsage")]
+    partial class NoPKeyOnMastersUsage
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -298,24 +298,33 @@ namespace InkRealmMVC.Migrations
                     b.ToTable("master_reviews");
                 });
 
-            modelBuilder.Entity("InkRealmMVC.Models.DbModels.MastersSupply", b =>
+            modelBuilder.Entity("InkRealmMVC.Models.DbModels.MastersServices", b =>
                 {
                     b.Property<int>("MasterId")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
                         .HasColumnName("master_id");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("MasterId"));
+                    b.Property<int>("ServiceId")
+                        .HasColumnType("integer")
+                        .HasColumnName("service_id");
 
+                    b.ToTable("masters_services");
+                });
+
+            modelBuilder.Entity("InkRealmMVC.Models.DbModels.MastersSupply", b =>
+                {
                     b.Property<int?>("Amount")
                         .HasColumnType("integer")
                         .HasColumnName("amount");
 
+                    b.Property<int>("MasterId")
+                        .HasColumnType("integer")
+                        .HasColumnName("master_id");
+
                     b.Property<Guid?>("SuplId")
+                        .IsRequired()
                         .HasColumnType("uuid")
                         .HasColumnName("supl_id");
-
-                    b.HasKey("MasterId");
 
                     b.ToTable("masters_supplies");
                 });

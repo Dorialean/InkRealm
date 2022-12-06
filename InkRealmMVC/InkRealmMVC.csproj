@@ -17,10 +17,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Remove="Views\MasterArea\Index.cshtml" />
-  </ItemGroup>
-
-  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -37,10 +34,6 @@
     <Folder Include="wwwroot\img\clients_img\" />
     <Folder Include="wwwroot\img\masters_img\info\" />
     <Folder Include="wwwroot\img\masters_img\works\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="Views\MasterArea\Index.cshtml" />
   </ItemGroup>
 
 </Project>

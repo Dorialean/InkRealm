@@ -15,7 +15,7 @@ namespace InkRealmMVC.Models
         public string? PhotoLink { get; set; }
         public int? ExperienceYears { get; set; }
         public string? OtherInfo { get; set; }
-        public TimeOnly Registered { get; set; } = TimeOnly.FromDateTime(DateTime.Now);
+        public DateTime Registered { get; set; } = DateTime.Now;
         public List<string> ServicesTitles { get; set; } = null!;
         public List<string>? SuppliesTitles { get; set; }
         public string StudioAddress { get; set; }
