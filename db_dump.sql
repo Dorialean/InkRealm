@@ -17,19 +17,6 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 --
--- Name: profession; Type: TYPE; Schema: public; Owner: postgres
---
-
-CREATE TYPE public.profession AS ENUM (
-    'sketch designer',
-    'tatoo master',
-    'pirsing master'
-);
-
-
-ALTER TYPE public.profession OWNER TO postgres;
-
---
 -- Name: add_prof(text); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -57,7 +44,8 @@ CREATE TABLE public.clients_needs (
     service_id integer,
     service_date timestamp without time zone,
     order_id uuid,
-    client_id integer NOT NULL
+    client_id integer NOT NULL,
+    master_id integer
 );
 
 
@@ -73,7 +61,7 @@ CREATE TABLE public.ink_clients (
     surname character varying(30) NOT NULL,
     father_name character varying(30),
     mobile_phone character varying(20),
-    email character varying(60),
+    email character varying(60) NOT NULL,
     login character varying(50) NOT NULL,
     password bytea NOT NULL,
     registered timestamp without time zone DEFAULT now() NOT NULL,
@@ -134,8 +122,8 @@ CREATE TABLE public.ink_masters (
     studio_id uuid NOT NULL,
     login character varying(50) NOT NULL,
     password bytea NOT NULL,
-    registered time without time zone DEFAULT now() NOT NULL,
-    ink_post public.profession NOT NULL
+    ink_post text NOT NULL,
+    registered timestamp without time zone DEFAULT now()
 );
 
 
@@ -243,7 +231,7 @@ ALTER TABLE public.master_reviews OWNER TO postgres;
 --
 
 CREATE TABLE public.masters_services (
-    master_id integer,
+    master_id integer NOT NULL,
     service_id integer
 );
 
@@ -270,7 +258,8 @@ ALTER TABLE public.masters_supplies OWNER TO postgres;
 CREATE TABLE public.orders (
     order_id uuid DEFAULT gen_random_uuid() NOT NULL,
     product_id uuid,
-    create_date timestamp without time zone DEFAULT now()
+    create_date timestamp without time zone DEFAULT now(),
+    client_id integer NOT NULL
 );
 
 
@@ -307,7 +296,7 @@ ALTER TABLE ONLY public.ink_services ALTER COLUMN service_id SET DEFAULT nextval
 -- Data for Name: clients_needs; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public.clients_needs (service_id, service_date, order_id, client_id) FROM stdin;
+COPY public.clients_needs (service_id, service_date, order_id, client_id, master_id) FROM stdin;
 \.
 
 
@@ -316,6 +305,7 @@ COPY public.clients_needs (service_id, service_date, order_id, client_id) FROM s
 --
 
 COPY public.ink_clients (client_id, first_name, surname, father_name, mobile_phone, email, login, password, registered) FROM stdin;
+2	Имя	Фамилия	Отчество		abra@codabra.ru	Aboba	\\xaf1e6425dc555dd15c632579f3f952bf1b51007bacc5a63d84be472e06b9c6ab	2022-12-07 19:05:32.344739
 \.
 
 
@@ -323,7 +313,8 @@ COPY public.ink_clients (client_id, first_name, surname, father_name, mobile_pho
 -- Data for Name: ink_masters; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public.ink_masters (master_id, first_name, second_name, father_name, photo_link, experience_years, other_info, studio_id, login, password, registered, ink_post) FROM stdin;
+COPY public.ink_masters (master_id, first_name, second_name, father_name, photo_link, experience_years, other_info, studio_id, login, password, ink_post, registered) FROM stdin;
+1	Imya	Familiya	Otchestvo		\N	\N	2ceb8771-2062-41e7-af19-156cda06f3da	Login	\\xb272f32f1f0e49cb997d91522ee7429969fc1c981a77e58f5f46c67ca0942480	sketch designer	2022-12-06 13:03:22.927361
 \.
 
 
@@ -381,6 +372,9 @@ COPY public.masters_services (master_id, service_id) FROM stdin;
 --
 
 COPY public.masters_supplies (master_id, supl_id, amount) FROM stdin;
+1	d558af9e-8de2-48d6-966d-beaa221e7f1e	1
+1	1ca3034b-229a-4fe1-af63-ade1960e2217	1
+1	866f076b-1e29-40ab-a323-9919687a7189	1
 \.
 
 
@@ -388,7 +382,7 @@ COPY public.masters_supplies (master_id, supl_id, amount) FROM stdin;
 -- Data for Name: orders; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public.orders (order_id, product_id, create_date) FROM stdin;
+COPY public.orders (order_id, product_id, create_date, client_id) FROM stdin;
 \.
 
 
@@ -407,7 +401,7 @@ c8973f11-c2c8-4003-b7c5-8997fe5a3aa0	428051, Томская область, го
 -- Name: ink_clients_client_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.ink_clients_client_id_seq', 1, false);
+SELECT pg_catalog.setval('public.ink_clients_client_id_seq', 2, true);
 
 
 --
@@ -488,14 +482,6 @@ ALTER TABLE ONLY public.master_reviews
 
 
 --
--- Name: masters_supplies masters_supplies_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.masters_supplies
-    ADD CONSTRAINT masters_supplies_pkey PRIMARY KEY (master_id);
-
-
---
 -- Name: orders orders_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -559,6 +545,14 @@ ALTER TABLE ONLY public.ink_masters
 
 
 --
+-- Name: clients_needs master_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.clients_needs
+    ADD CONSTRAINT master_id_fk FOREIGN KEY (master_id) REFERENCES public.ink_masters(master_id);
+
+
+--
 -- Name: master_reviews master_reviews_client_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -612,6 +606,14 @@ ALTER TABLE ONLY public.masters_supplies
 
 ALTER TABLE ONLY public.masters_supplies
     ADD CONSTRAINT masters_supplies_supl_id_fkey FOREIGN KEY (supl_id) REFERENCES public.ink_supplies(supl_id);
+
+
+--
+-- Name: orders orders_client_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.orders
+    ADD CONSTRAINT orders_client_id_fkey FOREIGN KEY (client_id) REFERENCES public.ink_clients(client_id);
 
 
 --
