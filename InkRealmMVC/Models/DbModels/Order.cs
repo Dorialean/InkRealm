@@ -17,5 +17,8 @@ public partial class Order
     public Guid? ProductId { get; set; }
 
     [Column("create_date", TypeName = "timestamp without time zone")]
-    public DateTime? CreateDate { get; set; }
+    public DateTime? CreateDate { get; set; } = DateTime.Now;
+
+    [Column("client_id")]
+    public int ClientId { get; set; }
 }

@@ -1,7 +1,16 @@
-﻿@{
-    ViewData["Title"] = "Index";
+﻿@model ClientSpaceModel
+@{
+    ViewData["Title"] = "Личный кабинет";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    var client = Model.Client;
 }
 
-<h1>Index</h1>
+<div class="col">
+    <p>Ваша почта:@client.Email</p>
+</div>
+
+
+@section Scripts{
+    <link rel="stylesheet" href="~/css/client_space.css" asp-append-version="true" />
+}
 

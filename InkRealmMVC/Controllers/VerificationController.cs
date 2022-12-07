@@ -162,9 +162,9 @@ namespace InkRealmMVC.Controllers
                     {
                         new(){ Value=client.FirstName},
                         new(){ Value=client.Surname},
-                        new(){ Value=client.FatherName?? string.Empty },
-                        new(){ Value=client.MobilePhone},
-                        new(){ Value=client.Email},
+                        new(){ Value=client.FatherName ?? string.Empty },
+                        new(){ Value=client.MobilePhone ?? string.Empty},
+                        new(){ Value=client.Email ?? string.Empty},
                         new(){ Value=client.Login},
                         new(){ Value=client.EncryptedPassword}
                     }
@@ -172,7 +172,7 @@ namespace InkRealmMVC.Controllers
                 await cmd.ExecuteNonQueryAsync();
             }
             await RegisterNewUser(client);
-            return await Task.Run(() => RedirectToAction("Index", "ClientArea"));
+            return await Task.Run(() => RedirectToAction("Index", "Home"));
         }
 
         [HttpGet]

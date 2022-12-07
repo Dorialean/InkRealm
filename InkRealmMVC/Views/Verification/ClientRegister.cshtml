@@ -4,7 +4,7 @@
     string labelsClasses = "form-label mt-2";
     string formsClasses = "form-control mb-2";
 }
-<form asp-controller="Auth" asp-action="ClientRegister" method="post">
+<form asp-controller="Verification" asp-action="ClientRegister" method="post">
     <label class=@labelsClasses asp-for="Login">Введите логин</label>
     <input class=@formsClasses type="text" asp-for="Login" placeholder="Логин"/>
 
