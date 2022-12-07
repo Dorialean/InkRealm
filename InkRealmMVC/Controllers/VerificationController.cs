@@ -22,7 +22,6 @@ namespace InkRealmMVC.Controllers
         private readonly SHA256 sha256 = SHA256.Create();
 
         const string MASTER_PICTURE_INFO_PATH = "wwwroot/img/masters_img/info";
-        const string MASTER_PICTURE_WORK_PATH = "wwwroot/img/masters_img/works";
         const string CLIENT_PICTURE_PATH = "wwwroot/img/clients_img";
 
         public VerificationController(InkRealmContext context)

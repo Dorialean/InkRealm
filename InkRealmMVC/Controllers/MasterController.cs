@@ -2,12 +2,16 @@
 using InkRealmMVC.Models.DbModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Immutable;
 
 namespace InkRealmMVC.Controllers
 {
     public class MasterController : Controller
     {
         private readonly InkRealmContext _context;
+
+        const string MASTER_PICTURE_WORK_PATH = "wwwroot/img/masters_img/works";
+        
 
         public MasterController(InkRealmContext context)
         {
@@ -19,8 +23,8 @@ namespace InkRealmMVC.Controllers
         public IActionResult Index()
         {
             InkMaster master;
-            List<MastersServices> services = new();
-            List<MastersSupply> supplies = new();
+            List<InkService> services = new();
+            List<InkSupply> supplies = new();
             List<ClientsNeed> mastersWork = new();
             Studio studio;
 
@@ -28,8 +32,12 @@ namespace InkRealmMVC.Controllers
             {
                 master = _context.InkMasters.First(m => m.Login == User.Identity.Name);
                 studio = _context.Studios.Find(master.StudioId);
-                services = _context.MastersServices.Select(s => s).Where(s => s.MasterId == master.MasterId).ToList();
-                supplies = _context.MastersSupplies.Select(s => s).Where(s => s.MasterId == master.MasterId).ToList();
+                services = (from mServs in _context.MastersServices.ToList() join servs in _context.InkServices.ToList() 
+                                on mServs.ServiceId equals servs.ServiceId
+                           select servs).ToList(); 
+                supplies = (from mSupl in _context.MastersSupplies.ToList() join supl in _context.InkSupplies.ToList()
+                                on mSupl.SuplId equals supl.SuplId
+                            select supl).ToList();
                 mastersWork = _context.ClientsNeeds.Select(n => n).Where(n => n.MasterId == master.MasterId).ToList();
 
                 return View(new MasterSpaceModel()
@@ -42,5 +50,7 @@ namespace InkRealmMVC.Controllers
                 });
             }
         }
+
+
     }
 }

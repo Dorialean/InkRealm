@@ -1,8 +1,137 @@
-﻿@model MasterSpaceModel
+﻿@using InkRealmMVC.Models.DbModels;
+@using Newtonsoft.Json;
+@model MasterSpaceModel
 @{
     ViewData["Title"] = "Кабинет мастера";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    var master = Model.Master;
+    var studio = Model.MasterStudio;
+    var services = Model.MasterServices;
+    var supplies = Model.MastersSupplies;
+    var works = Model.MastersWorks;
+    OtherInfoModel? otherInfo = null;
+    if (!string.IsNullOrEmpty(master.OtherInfo))
+    {
+        otherInfo = JsonConvert.DeserializeObject<OtherInfoModel>(master.OtherInfo as string);
+    }
 }
 
+<div class="col">
+    <div class="row">
+        @if (!(string.IsNullOrWhiteSpace(master.PhotoLink) || string.IsNullOrEmpty(master.PhotoLink)))
+        {
+            //Надо будет протестировать с картинкой
+            <img class="col-2 img-thumbnail" src=@master.PhotoLink style="max-width:60px;max-height:50px;" />
+        }
+        else
+        {
+            <img class="col-1 me-1 img-thumbnail" src="~/img/app_img/user_icon.png" style="max-width:60px;max-height:45px;" />
+        }
+        <span class="col fs-3 row multiround-text mb-1">Ваше имя: @master.FirstName</span>
 
+        @*Добавить логику в ajax*@
+        <div class="col">
+            <label class="form-label">Хотите сменить фото профиля?</label>
+            <input id="info_photo" class="form-control" type="file" />
+            @*В ajax просто убрать класс visually-hidden после ввода файла*@
+            <div class="d-flex justify-content-center visually-hidden">
+                <button class="btn btn-primary mt-1">Сменить фото</button>
+            </div>
+            
+        </div>
+        
+
+        @if (string.IsNullOrEmpty(master.FatherName))
+        {
+            <pre class="fs-5 row fw-light mb-2">Ваша фамилия: @master.SecondName</pre>
+        }
+        else
+        {
+            <pre class="fs-5 row fw-light mb-2">Ваша фамилия: @master.SecondName    | Отчество: @master.FatherName</pre>
+        }
+        <div class="row mt-4">
+            @if (works.Count > 0)
+            {
+                @*Добавить, когда будут клиенты*@
+            }
+            else
+            {
+                <p class="alert-success text-center p-4 rounded">Пока записей на приём нет</p>
+            }
+        </div>
+
+        @if (otherInfo != null)
+        {
+            foreach (var photoLink in otherInfo.WorkPhotoLink)
+            {
+                <div class="col-lg-3 col-md-6 me-1">
+                    <img class="rounded" src=@photoLink style="max-width:200px;max-height:200px;"/>
+                </div>
+            }
+
+        }
+
+        
+
+        @if (supplies.Count > 0)
+        {
+            <div class="row border border-3 mt-2 mb-2">
+                <p class="gulag-text fs-4 mt-2">Предоставленное Вам оборудование:</p>
+                @foreach (var supl in supplies)
+                {
+                    <div class="card border-2 border-dark pt-2 col-lg me-lg-1 mb-lg-2">
+                        <p class="card-header fs-5">@supl.Title</p>
+                        <div class="card-body">
+                            <p class="card-text ms-1 fs-6">@supl.Description</p>
+                        </div>
+                        <p class="card-footer fs-6">@supl.Price ₽</p>
+                    </div>
+                }
+                <div class="d-flex justify-content-md-center flex-lg-row d-lg-inline-flex">
+                    <a class="btn btn-outline-warning mb-3 text-black">Запросить ещё</a>
+                </div>       
+            </div>
+        }
+
+        @*Добавить, когда будут услуги*@
+        @if (services.Count > 0)
+        {
+            <div class="row border border-3">
+                <p class="row fs-5">Вы предоставляете такие услуги:</p>
+                @foreach (var service in services)
+                {
+                    <span class="row">@service.Title</span>
+                    <span class="row">@service.Description</span>
+                    <span class="row">@service.MinPrice</span>
+                    if (service.MaxPrice != null && service.MaxPrice != 0)
+                    {
+                        <span class="row">@service.MaxPrice</span>
+                    }
+                }
+            </div>
+            @*Здесь отдельная страница*@
+            <a class="btn btn-success mb-2">
+                <p сlass="text-wrap">Добавить ещё услуги</p>
+            </a>
+        }
+
+        <span class="row border border-3 rounded mb-2">
+            <p class="fs-5">Вы работаете по адресу: 
+                <a class="ms-3 row link" href="#">@studio.Address</a>
+            </p>
+            <p class="fs-6">Где аренда обходится в @studio.RentalPricePerMonth?.ToString("#")₽</p>
+        </span>
+    </div> 
+
+    <div class="row flex-row">
+        <a class="btn btn-danger row justify-self-center" asp-controller="Verification" asp-action="Logout">
+            <span class="street-text text-nowrap">Выйти из аккакунта</span>
+        </a>
+    </div>
+
+</div>
+
+@section Scripts{
+    <link rel="stylesheet" href="~/css/master_space.css" asp-append-version="true" />
+}
 

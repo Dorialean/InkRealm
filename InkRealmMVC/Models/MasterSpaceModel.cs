@@ -6,8 +6,8 @@ namespace InkRealmMVC.Models
     {
         public InkMaster Master { get; set; }
         public Studio MasterStudio { get; set; }
-        public List<MastersServices> MasterServices { get; set; }
-        public List<MastersSupply> MastersSupplies { get; set; }
+        public List<InkService> MasterServices { get; set; }
+        public List<InkSupply> MastersSupplies { get; set; }
         public List<ClientsNeed> MastersWorks { get; set; }
     }
 }
