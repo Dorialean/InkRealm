@@ -19,7 +19,7 @@ namespace InkRealmMVC.Controllers
     public class VerificationController : Controller
     {
         private readonly InkRealmContext _context;
-        private readonly SHA256 sha256 = SHA256.Create();
+        private readonly SHA256 _sha256 = SHA256.Create();
 
         const string MASTER_PICTURE_INFO_PATH = "wwwroot/img/masters_img/info";
         const string CLIENT_PICTURE_PATH = "wwwroot/img/clients_img";
@@ -36,7 +36,7 @@ namespace InkRealmMVC.Controllers
             List<Studio> allStudios;
             List<InkService> allInkServices;
             List<InkSupply> allInkSupplies;
-            string[] profs = new string[] { "sketch designer", "tatoo login", "pirsing login" };
+            string[] profs = { "sketch designer", "tatoo login", "pirsing login" };
 
             using (_context)
             {
@@ -134,7 +134,7 @@ namespace InkRealmMVC.Controllers
                 }
             }
             await RegisterNewUser(master);
-            return await Task.Run(() =>  RedirectToAction("Index", "MasterArea"));
+            return await Task.Run(() =>  RedirectToAction("Index", "Master"));
         }
         
         [HttpGet]
@@ -191,7 +191,7 @@ namespace InkRealmMVC.Controllers
         {
             using (_context) 
             {
-                if (await _context.InkMasters.FirstAsync(m => m.Login == loginInfo.Login) != null)
+                if (await _context.InkMasters.FirstOrDefaultAsync(m => m.Login == loginInfo.Login) != null)
                 {
                     var master = await _context.InkMasters.FirstAsync(m => m.Login == loginInfo.Login);
                     byte[] genPass = GeneratePassword(loginInfo.Password, master.Registered);
@@ -203,7 +203,7 @@ namespace InkRealmMVC.Controllers
                     else
                         return await Task.Run(() => BadRequest("Нерпавильный пароль"));
                 }
-                else if (await _context.InkClients.FirstAsync(c => c.Login == loginInfo.Login) != null)
+                else if (await _context.InkClients.FirstOrDefaultAsync(c => c.Login == loginInfo.Login) != null)
                 {
                     var client = await _context.InkClients.FirstAsync(c => c.Login == loginInfo.Login);
                     if (client.Password.SequenceEqual(GeneratePassword(loginInfo.Password, client.Registered)))
@@ -305,7 +305,7 @@ namespace InkRealmMVC.Controllers
             byte[] passBytes = Encoding.ASCII.GetBytes(password);
             byte[] saltBytes = Encoding.ASCII.GetBytes(time.ToString());
             byte[] resToEncrypt = passBytes.Concat(saltBytes).ToArray();
-            return sha256.ComputeHash(resToEncrypt);
+            return _sha256.ComputeHash(resToEncrypt);
         }
 
         private byte[] GeneratePassword(string password, string time)
@@ -313,7 +313,7 @@ namespace InkRealmMVC.Controllers
             byte[] passBytes = Encoding.ASCII.GetBytes(password);
             byte[] saltBytes = Encoding.ASCII.GetBytes(time);
             byte[] resToEncrypt = passBytes.Concat(saltBytes).ToArray();
-            return sha256.ComputeHash(resToEncrypt);
+            return _sha256.ComputeHash(resToEncrypt);
         }
 
         private byte[] GeneratePassword(string password, DateTime date)
@@ -321,7 +321,7 @@ namespace InkRealmMVC.Controllers
             byte[] passBytes = Encoding.ASCII.GetBytes(password);
             byte[] saltBytes = Encoding.ASCII.GetBytes(date.ToString());
             byte[] resToEncrypt = passBytes.Concat(saltBytes).ToArray();
-            return sha256.ComputeHash(resToEncrypt);
+            return _sha256.ComputeHash(resToEncrypt);
         }
 
     }

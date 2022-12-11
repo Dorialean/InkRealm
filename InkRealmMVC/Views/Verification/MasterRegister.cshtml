@@ -9,8 +9,8 @@
 }
 
 @*На самом деле подход через таг-хелперы в атрбитуах мне нравится больше, лучше переписать будет*@
-<a class="row mt-3 mb-5 fs-1 link-info maintext" asp-action="Login" asp-controller="Auth">Я уже зарегистрирован</a>
-@using (Html.BeginForm("MasterRegister", "Auth", FormMethod.Post, new { @class = "col", enctype = "multipart/form-data" }))
+<a class="row mt-3 mb-5 fs-1 link-info maintext" asp-action="Auth" asp-controller="Verification">Я уже зарегистрирован</a>
+@using (Html.BeginForm("MasterRegister", "Verification", FormMethod.Post, new { @class = "col", enctype = "multipart/form-data" }))
 {
     <label class="row col-form-label">Введите логин</label>
     @Html.TextBoxFor(m => m.Login,  new { @class = formsClasses, placeholder="Логин" })

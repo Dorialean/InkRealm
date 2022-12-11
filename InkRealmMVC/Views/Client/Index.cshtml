@@ -3,10 +3,51 @@
     ViewData["Title"] = "Личный кабинет";
     Layout = "~/Views/Shared/_Layout.cshtml";
     var client = Model.Client;
+    var orderedProducts = Model.OrderedProducts;
+    var reviews = Model.ClientReviewd;
+    var masters = Model.MastersToCome;
+    var services = Model.ClientServices;
 }
 
 <div class="col">
-    <p>Ваша почта:@client.Email</p>
+    <div class="row">
+        <p class="row text-nowrap fs-3 text-start">Добро пожаловать в личный кабинет, @client.FirstName</p>
+        <p class="row">Ваша почта:@client.Email</p>
+        @if (!string.IsNullOrEmpty(client.MobilePhone))
+        {
+            <p class="row">Ваш номер телефона: @client.MobilePhone</p>
+        }
+    </div>
+
+    @if (orderedProducts.Any())
+    {
+        <div class="row border border-3">
+            @foreach (var prod in orderedProducts)
+            {
+                <p class="row fs-3">@prod.Title</p>
+                <p class="row fs-4">@prod.Description</p>
+                @if (prod.PhotoLink != null)
+                {
+                    <img src=@prod.PhotoLink style="max-height: 30px;max-width: 30px;"/>
+                }
+                <p class="row">@prod.EachPrice.ToString()</p>
+            }
+        </div>
+    }
+    
+    @if (reviews.Any())
+    {
+        <div class="row">
+            @foreach (var rev in reviews)
+            {
+                if (rev.Rating != null)
+                {
+                    <p class="row">@rev.Rating.ToString()</p>    
+                }
+                <p class="row">@rev.Review</p>
+            }
+        </div>
+    }
 </div>
 
 
