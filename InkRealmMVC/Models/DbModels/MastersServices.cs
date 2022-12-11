@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace InkRealmMVC.Models.DbModels
 {
     [Table("masters_services")]
-    [Keyless]
+    [PrimaryKey(nameof(MasterId),nameof(ServiceId))]
     public class MastersServices
     {
         

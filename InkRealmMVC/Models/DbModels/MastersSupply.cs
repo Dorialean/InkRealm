@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 namespace InkRealmMVC.Models.DbModels;
 
 [Table("masters_supplies")]
-[Keyless]
+[PrimaryKey(nameof(MasterId),nameof(SuplId))]
 public partial class MastersSupply
 {
     [Column("master_id")]
@@ -16,7 +16,7 @@ public partial class MastersSupply
 
     [Column("supl_id")]
     [Required]
-    public Guid? SuplId { get; set; }
+    public Guid SuplId { get; set; }
 
     [Column("amount")]
     public int? Amount { get; set; }

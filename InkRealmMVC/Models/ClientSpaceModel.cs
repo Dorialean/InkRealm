@@ -6,7 +6,6 @@ namespace InkRealmMVC.Models
     {
         public InkClient Client { get; set; }
         public List<Order>? Orders { get; set; }
-        public List<ClientsNeed>? ClientNeeds { get; set; }
         public List<InkService>? ClientServices { get; set; }
         public List<InkMaster>? MastersToCome { get; set; }
         public List<MasterReviews>? ClientReviewd { get; set; }

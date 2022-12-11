@@ -3,6 +3,7 @@ using System;
 using InkRealmMVC.Models.DbModels;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace InkRealmMVC.Migrations
 {
     [DbContext(typeof(InkRealmContext))]
-    partial class InkRealmContextModelSnapshot : ModelSnapshot
+    [Migration("20221211135531_DatabaseRefactor")]
+    partial class DatabaseRefactor
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -64,6 +67,7 @@ namespace InkRealmMVC.Migrations
                         .HasColumnName("password");
 
                     b.Property<string>("PhotoLink")
+                        .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("photo_link");
 
@@ -365,7 +369,7 @@ namespace InkRealmMVC.Migrations
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("create_date");
 
-                    b.Property<DateTime>("FinishedDate")
+                    b.Property<DateTime>("MyProperty")
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("finished_date");
 

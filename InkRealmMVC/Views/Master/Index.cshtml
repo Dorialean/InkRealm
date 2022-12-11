@@ -8,7 +8,6 @@
     var studio = Model.MasterStudio;
     var services = Model.MasterServices;
     var supplies = Model.MastersSupplies;
-    var works = Model.MastersWorks;
     OtherInfoModel? otherInfo = null;
     if (!string.IsNullOrEmpty(master.OtherInfo))
     {
@@ -49,16 +48,6 @@
         {
             <pre class="fs-5 row fw-light mb-2">Ваша фамилия: @master.SecondName    | Отчество: @master.FatherName</pre>
         }
-        <div class="row mt-4">
-            @if (works.Count > 0)
-            {
-                @*Добавить, когда будут клиенты*@
-            }
-            else
-            {
-                <p class="alert-success text-center p-4 rounded">Пока записей на приём нет</p>
-            }
-        </div>
 
         @if (otherInfo != null)
         {

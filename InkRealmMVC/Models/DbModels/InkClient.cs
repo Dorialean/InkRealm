@@ -46,4 +46,7 @@ public partial class InkClient
 
     [Column("registered", TypeName = "timestamp without time zone")]
     public DateTime Registered { get; set; }
+
+    [Column("photo_link")]
+    public string? PhotoLink { get; set; }
 }

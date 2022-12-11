@@ -29,4 +29,7 @@ public partial class InkProduct
 
     [Column("photo_link")]
     public string? PhotoLink { get; set; }
+
+    [Column("garantee_to_add_days")]
+    public int GaranteeDaysToAdd { get; set; } = 14;
 }

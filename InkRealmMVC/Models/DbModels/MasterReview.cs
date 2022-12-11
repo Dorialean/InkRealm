@@ -7,13 +7,11 @@ using Microsoft.EntityFrameworkCore;
 namespace InkRealmMVC.Models.DbModels;
 
 [Table("master_reviews")]
+[PrimaryKey(nameof(ClientId),nameof(MasterId))]
 public partial class MasterReviews
 {
-    [Key]
-    [Column("master_review_id")]
-    public int MasterReviewId { get; set; }
-
     [Column("client_id")]
+    [Required]
     public int ClientId { get; set; }
 
     [Column("master_id")]

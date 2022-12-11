@@ -30,7 +30,7 @@ namespace InkRealmMVC.Controllers
             using (_context)
             {
                 if (User.IsInRole(Role.InkClient))
-                    inkClient = _context.InkClients.First(c => c.Login == User.Identity.Name);
+                    inkClient = _context.InkClients.FirstOrDefault(c => c.Login == User.Identity.Name);
                 services = _context.InkServices.ToList();
                 products = _context.InkProducts.ToList();
                 masters = _context.InkMasters.ToList();

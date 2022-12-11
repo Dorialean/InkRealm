@@ -25,7 +25,6 @@ namespace InkRealmMVC.Controllers
             InkMaster master;
             List<InkService> services = new();
             List<InkSupply> supplies = new();
-            List<ClientsNeed> mastersWork = new();
             Studio studio;
 
             using (_context)
@@ -38,14 +37,12 @@ namespace InkRealmMVC.Controllers
                 supplies = (from mSupl in _context.MastersSupplies.ToList() join supl in _context.InkSupplies.ToList()
                                 on mSupl.SuplId equals supl.SuplId
                             select supl).ToList();
-                mastersWork = _context.ClientsNeeds.Select(n => n).Where(n => n.MasterId == master.MasterId).ToList();
 
                 return View(new MasterSpaceModel()
                 {
                     Master = master,
                     MasterStudio = studio,
                     MasterServices = services,
-                    MastersWorks = mastersWork,
                     MastersSupplies = supplies
                 });
             }

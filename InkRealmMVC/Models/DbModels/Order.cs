@@ -21,4 +21,7 @@ public partial class Order
 
     [Column("client_id")]
     public int ClientId { get; set; }
+
+    [Column("finished_date",TypeName = "timestamp without time zone")]
+    public DateTime FinishedDate { get; set; }
 }

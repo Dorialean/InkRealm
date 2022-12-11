@@ -19,4 +19,7 @@ public partial class Studio
 
     [Column("rental_price_per_month", TypeName = "money")]
     public decimal? RentalPricePerMonth { get; set; }
+
+    [Column("photo_link")]
+    public string? PhotoLink { get; set; }
 }
