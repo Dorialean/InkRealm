@@ -29,6 +29,7 @@
                     <p>@mastersInfo[0].ServiceMinPrice.ToString()</p>
                 }
             </div>
+            @*Здесь надо сделать так, чтобы отображались все сервисы каждого сотрудника*@
             @for (int i = 2; i < mastersInfo.Count; i++)
             {
                 if(mastersInfo[i-1].MasterId != mastersInfo[i].MasterId)
