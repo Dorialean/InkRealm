@@ -2,37 +2,41 @@
 using System.Text;
 using LoremNET;
 using Npgsql.PostgresTypes;
+using InkRealmMVC.Models;
+using System.Data;
 
 internal class Program
 {
     static readonly Random rnd = new();
+
     private static async Task Main(string[] args)
     {
-        string[] namesFor = { "Набор", "Инструмент", "Средство", "Комплекс" };
-        string[] pretext = { "для", "от", "чтобы", "затем", "временного", "переводного", "постоянного" };
-        string[] tatooContext = { "тату", "эскиз", "пирсинга", "набросок", "краски" };
-        string[] addingInfo = { "змея", "кролик", "самолёт", "пират", "птица", "цитата", "стих", "капибара", "зеркало", "снег" };
-        HashSet<string> generetatedTitles = new();
-
-        while (generetatedTitles.Count < 500)
-        {
-            StringBuilder title = new();
-            title.Append(namesFor[rnd.Next(namesFor.Length - 1)]);
-            title.Append(' ');
-            title.Append(pretext[rnd.Next(pretext.Length - 1)]);
-            title.Append(' ');
-            title.Append(tatooContext[rnd.Next(tatooContext.Length - 1)]);
-            title.Append(' ');
-            title.Append(addingInfo[rnd.Next(addingInfo.Length - 1)]);
-            generetatedTitles.Add(title.ToString());
-        }
-        
-
-        foreach (var t in generetatedTitles)
-        {
-            string loremShit = Lorem.Sentence(rnd.Next(10, 1_000_000));        
-            await GenerateTrashForInkProductAsync(t, loremShit);
-        }
+        await CheckForView();
+       // string[] namesFor = { "Набор", "Инструмент", "Средство", "Комплекс" };
+       // string[] pretext = { "для", "от", "чтобы", "затем", /"временного", /"переводного", "постоянного" };
+       // string[] tatooContext = { "тату", "эскиз", "пирсинга", /"набросок", /"краски" };
+       // string[] addingInfo = { "змея", "кролик", "самолёт", "пират", /"птица", /"цитата", "стих", "капибара", "зеркало", "снег" };
+       // HashSet<string> generetatedTitles = new();
+       //
+       // while (generetatedTitles.Count < 500)
+       // {
+       //     StringBuilder title = new();
+       //     title.Append(namesFor[rnd.Next(namesFor.Length - 1)]);
+       //     title.Append(' ');
+       //     title.Append(pretext[rnd.Next(pretext.Length - 1)]);
+       //     title.Append(' ');
+       //     title.Append(tatooContext[rnd.Next(tatooContext.Length - 1)]);
+       //     title.Append(' ');
+       //     title.Append(addingInfo[rnd.Next(addingInfo.Length - 1)]);
+       //     generetatedTitles.Add(title.ToString());
+       // }
+       // 
+       //
+       // foreach (var t in generetatedTitles)
+       // {
+       //     string loremShit = Lorem.Sentence(rnd.Next(10, 1_000_000));        
+       //     await GenerateTrashForInkProductAsync(t, loremShit);
+       // }
     }
 
     private async static Task GenerateTrashForInkProductAsync(string title, string lorem)
@@ -55,4 +59,6 @@ internal class Program
         await query.ExecuteNonQueryAsync();
         await conn.CloseAsync();
     }
+
+    
 }

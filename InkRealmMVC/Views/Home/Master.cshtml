@@ -1,0 +1,65 @@
+﻿@model MasterModel
+@{
+    ViewData["Title"] = "Наши мастера";
+    var mastersInfo = Model.MasterToServices;
+}
+
+<div class="col">
+    <div class="row">
+        @if(mastersInfo.Count > 0)
+        {
+            <div class="card col">
+                @if (mastersInfo[0].PhotoLink != null)
+                {
+                    <img class="card-img-top" src=@mastersInfo[0].PhotoLink/>
+                }
+                @if(mastersInfo[0].FatherName != null)
+                {
+                    <p class="card-title">@mastersInfo[0].FirstName @mastersInfo[0].SecondName @mastersInfo[0].FatherName</p>
+                }
+                else
+                {
+                    <p class="card-title">@mastersInfo[0].FirstName @mastersInfo[0].SecondName</p>
+                }
+                <p class="text-warning fs-5">@mastersInfo[0].Post</p>
+                <p>@mastersInfo[0].ServiceTitle</p>
+                <p>@mastersInfo[0].ServiceMinPrice.ToString()</p>
+                @if (mastersInfo[0].ServiceMaxPrice != null)
+                {
+                    <p>@mastersInfo[0].ServiceMinPrice.ToString()</p>
+                }
+            </div>
+            @for (int i = 2; i < mastersInfo.Count; i++)
+            {
+                if(mastersInfo[i-1].MasterId != mastersInfo[i].MasterId)
+                {
+                    <div class="card col">
+                        @if (mastersInfo[i].PhotoLink != null)
+                        {
+                            <img class="card-img-top" src=@mastersInfo[0].PhotoLink />
+                        }
+                        @if(mastersInfo[i].FatherName != null)
+                        {
+                        <p class="card-title">@mastersInfo[i].FirstName @mastersInfo[i].SecondName @mastersInfo[i].FatherName</p>
+                        }
+                        else
+                        {
+                        <p class="card-title">@mastersInfo[i].FirstName @mastersInfo[i].SecondName</p>
+                        }
+                        <p class="text-warning fs-5">@mastersInfo[i].Post</p>
+                        <p>@mastersInfo[i].ServiceTitle</p>
+                        <p>@mastersInfo[i].ServiceMinPrice.ToString()</p>
+                        @if (mastersInfo[i].ServiceMaxPrice != null)
+                        {
+                            <p>@mastersInfo[i].ServiceMinPrice.ToString()</p>
+                        }
+                    </div>
+                }
+                else
+                {
+                                
+                }
+            }    
+        }    
+    </div>
+</div>

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
+using Npgsql;
 using System.Diagnostics;
 
 namespace InkRealmMVC.Controllers
@@ -61,7 +62,56 @@ namespace InkRealmMVC.Controllers
             }
         }
 
+        public async Task<IActionResult> Master()
+        {
+            List<MasterToServicesFetchModel> masterToServices = await GetMasterPageInfoList();
+
+            return await Task.Run(() => View(new MasterModel()
+            {
+                MasterToServices = masterToServices
+            }));
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public async Task<IActionResult> Error() => await Task.Run(() => View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier }));
+
+        private async Task<List<MasterToServicesFetchModel>> GetMasterPageInfoList()
+        {
+            await using NpgsqlConnection conn = new("Host=localhost;Port=5432;Database=ink_realm;Username=postgres;Password=B&k34RPvvB12F");
+            await conn.OpenAsync();
+
+            await using var query = new NpgsqlCommand("SELECT * FROM masters_to_service_info", conn);
+
+            var reader = await query.ExecuteReaderAsync();
+            List<MasterToServicesFetchModel> fetch = new();
+
+            while (reader.Read())
+            {
+                string? fatherName = await reader.IsDBNullAsync(3) ? null : reader.GetString(3);
+                string? photoLink = await reader.IsDBNullAsync(6) ? null : reader.GetString(6);
+                string? description = await reader.IsDBNullAsync(8) ? null : reader.GetString(8);
+                decimal? maxPrice = await reader.IsDBNullAsync(10) ? null : reader.GetDecimal(10);
+                int? expirienceYears = await reader.IsDBNullAsync(4) ? null : reader.GetInt32(4);
+
+                fetch.Add(new()
+                {
+                    MasterId = reader.GetInt32(0),
+                    FirstName = reader.GetString(1),
+                    SecondName = reader.GetString(2),
+                    FatherName = fatherName,
+                    ExperienceYears = expirienceYears,
+                    Post = reader.GetString(5),
+                    PhotoLink = photoLink,
+                    ServiceTitle = reader.GetString(7),
+                    ServiceDescription = description,
+                    ServiceMinPrice = reader.GetDecimal(9),
+                    ServiceMaxPrice = maxPrice,
+                });
+            }
+
+            await conn.CloseAsync();
+
+            return fetch;
+        }
     }
 }

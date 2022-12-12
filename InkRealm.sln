@@ -5,7 +5,10 @@ VisualStudioVersion = 17.4.33110.190
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InkRealmMVC", "InkRealmMVC\InkRealmMVC.csproj", "{791047E0-34D4-42EA-961C-91519E2B4268}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InkProductsGenerator", "InkProductsGenerator\InkProductsGenerator.csproj", "{77F3A42C-E270-4838-AAFE-5A7C1CBB9F26}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InkProductsGenerator", "InkProductsGenerator\InkProductsGenerator.csproj", "{77F3A42C-E270-4838-AAFE-5A7C1CBB9F26}"
+	ProjectSection(ProjectDependencies) = postProject
+		{791047E0-34D4-42EA-961C-91519E2B4268} = {791047E0-34D4-42EA-961C-91519E2B4268}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
