@@ -24,12 +24,6 @@ public partial class InkProduct
     [Column("each_price", TypeName = "money")]
     public decimal EachPrice { get; set; }
 
-    [Column("props", TypeName = "jsonb")]
-    public string? Props { get; set; }
-
     [Column("photo_link")]
     public string? PhotoLink { get; set; }
-
-    [Column("garantee_to_add_days")]
-    public int GaranteeDaysToAdd { get; set; } = 14;
 }

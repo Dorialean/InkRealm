@@ -2,6 +2,7 @@
 using InkRealmMVC.Models.DbModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 using System.Diagnostics;
 
@@ -49,14 +50,16 @@ namespace InkRealmMVC.Controllers
             });
         }
 
-        /*
-        public async Task<IActionResult> Index()
-        {
-           return await Task.Run(View);
-        }
-        */
-
         public async Task<IActionResult> Privacy() => await Task.Run(View);
+
+        public async Task<IActionResult> Studio() 
+        {
+            using (_context)
+            {
+                List<Studio> allStudios = await _context.Studios.ToListAsync();
+                return await Task.Run(() => View(new StudioModel() { AllStudios = allStudios }));
+            }
+        }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public async Task<IActionResult> Error() => await Task.Run(() => View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier }));

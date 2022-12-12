@@ -10,21 +10,28 @@
     <link rel="icon" type="image/x-icon" href="~/favicon.png" asp-append-version="true">
 </head>
 <body>
-    @{
-        IReadOnlyList<string> NAV_BAR_BTNS_NAMES = new List<string>() { "Студии", "Услуги", "Мастера", "Магазин", "Приватность" };
-    }
     <header>
         <nav class="navbar navbar-expand-lg navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container">
                 <a class="col-3 navbar-brand main-name fs-1" asp-controller="Home" asp-action="Index">Ink Realm</a>
                 <div class="col-6 navbar-collapse">
                     <div class="navbar-nav align-content-sm-center">
-                        @foreach (var name in NAV_BAR_BTNS_NAMES)
-                        {
-                            <a class="nav-item nav-link maintext fs-2 p-1 ms-lg-3 me-lg-3 m-sm-2 text-sm-center text-md-center" href="#">
-                                <strong>@name</strong>
-                            </a>
-                        }
+                        <a class="nav-item nav-link maintext fs-2 p-1 ms-lg-3 me-lg-3 m-sm-2 text-sm-center text-md-center" asp-action="Studio">
+                            <strong>Студии</strong>
+                        </a>
+                        <a class="nav-item nav-link maintext fs-2 p-1 ms-lg-3 me-lg-3 m-sm-2 text-sm-center text-md-center" asp-action="Service">
+                            <strong>Услуги</strong>
+                        </a>
+                        <a class="nav-item nav-link maintext fs-2 p-1 ms-lg-3 me-lg-3 m-sm-2 text-sm-center text-md-center" asp-action="Master">
+                            <strong>Мастера</strong>
+                        </a>
+                        <a class="nav-item nav-link maintext fs-2 p-1 ms-lg-3 me-lg-3 m-sm-2 text-sm-center text-md-center" asp-action="Shop">
+                            <strong>Магазин</strong>
+                        </a>
+                        <a class="nav-item nav-link maintext fs-2 p-1 ms-lg-3 me-lg-3 m-sm-2 text-sm-center text-md-center" asp-action="Privacy">
+                            <strong>Приватность</strong>
+                        </a>
+
                         <button class="col-lg-3 nav-item ms-lg-5 btn-danger">
                             @if (User.IsInRole(Role.InkClient))
                             {

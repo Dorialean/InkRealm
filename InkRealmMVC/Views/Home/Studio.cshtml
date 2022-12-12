@@ -1,0 +1,27 @@
+﻿@model StudioModel
+@{
+    ViewData["Title"] = "Студии";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var studios = Model.AllStudios;
+    const int monthsInYear = 12;
+    const int yearsToOverCome = 4;
+}
+
+<div class="col">
+    <div class="row">
+        @foreach (var s in studios)
+        {
+            decimal? priceToBuy = s.RentalPricePerMonth * monthsInYear * yearsToOverCome;
+            <div class="card col">
+                @if (s.PhotoLink != null)
+                {
+                    <img class="card-img-top" src=@s.PhotoLink  />
+                }
+                <a class="card-title fs-4" href="https://www.google.ru/maps">@s.Address</a>
+                <p class="card-text fs-6 text-muted">Если Вы заинтересованы покупкой данного здания, то сумма должна превышать: <strong class="text-success">@priceToBuy.ToString() ₽</strong></p>
+            </div>
+        }
+    </div>
+</div>
+
+
