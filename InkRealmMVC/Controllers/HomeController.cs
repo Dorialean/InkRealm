@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 using Npgsql;
 using System.Diagnostics;
+using System.Net;
 
 namespace InkRealmMVC.Controllers
 {
@@ -71,6 +72,20 @@ namespace InkRealmMVC.Controllers
                 MasterToServices = masterToServices
             }));
         }
+
+        [Authorize(Roles = Role.InkClient)]
+        public async Task<IActionResult> Shop() 
+        {
+            using (_context)
+            {
+                List<InkProduct> allProducts = await _context.InkProducts.ToListAsync();
+                return await Task.Run(() => View(new ShopModel()
+                {
+                    AllProducts = allProducts
+                }));
+            }
+        }
+
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public async Task<IActionResult> Error() => await Task.Run(() => View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier }));
