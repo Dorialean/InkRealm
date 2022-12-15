@@ -12,7 +12,7 @@
         @foreach (var s in studios)
         {
             decimal? priceToBuy = s.RentalPricePerMonth * monthsInYear * yearsToOverCome;
-            <div class="card col">
+            <div class="card col me-2">
                 @if (s.PhotoLink != null)
                 {
                     <img class="card-img-top" src=@s.PhotoLink  />

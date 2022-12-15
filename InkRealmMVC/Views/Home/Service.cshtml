@@ -1,0 +1,28 @@
+﻿@model ServiceModel
+@{
+    ViewData["Title"] = "Сервисы";
+    var services = Model.AllServices;
+}
+<h3 class="row fs-2 mb-3">Мы предоставляем такие услуги:</h3>
+<div class="col border">
+    @if (services.Any())
+    {
+        foreach (var s in services)
+        {
+            <div class="row card border border-4 border-info mb-2">
+                <div class="card-body">
+                    <p class="card-title text-uppercase fw-bold">@s.Title</p>
+                    <p class="card-text font-weight-normal">@s.Description</p>
+                    <p class="text-center">Минимальная цена услуги: <strong class="text-success">@s.MinPrice ₽</strong></p>
+                    @if (s.MaxPrice != null && s.MaxPrice > 0)
+                    {
+                        <p class="text-center">Максимальная цена услуги: <strong class="text-secondary">@s.MaxPrice ₽</strong></p>
+                    }
+                    <a class="btn btn-primary text-center" href=#>Записаться на приём</a>
+                </div>
+            </div>
+        }
+    }
+</div>
+
+

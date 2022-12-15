@@ -75,6 +75,19 @@ namespace InkRealmMVC.Controllers
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public async Task<IActionResult> Error() => await Task.Run(() => View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier }));
 
+        public async Task<IActionResult> Service()
+        {
+            using (_context)
+            {
+                List<InkService> services = await _context.InkServices.ToListAsync();
+                return await Task.Run(() => View(new ServiceModel()
+                {
+                    AllServices = services
+                }));
+            }
+            
+        }
+
         private async Task<List<MasterToServicesFetchModel>> GetMasterPageInfoList()
         {
             await using NpgsqlConnection conn = new("Host=localhost;Port=5432;Database=ink_realm;Username=postgres;Password=B&k34RPvvB12F");

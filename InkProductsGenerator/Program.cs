@@ -4,6 +4,7 @@ using LoremNET;
 using Npgsql.PostgresTypes;
 using InkRealmMVC.Models;
 using System.Data;
+using InkProductsGenerator;
 
 internal class Program
 {
@@ -11,7 +12,61 @@ internal class Program
 
     private static async Task Main(string[] args)
     {
-        await CheckForView();
+        //Теперь это надо перенести на MasterFetch
+
+        List<TestModel> testsInfo = new();
+
+        for (int i = 1; i < 6; i++)
+        {
+            testsInfo.Add(new()
+            {
+                UserId = i,
+                InkTitle = $"{i}",
+                InkInfo = $"Some random info {i}"
+            });
+
+            if(i == 3)
+            {
+                testsInfo.Add(new()
+                {
+                    UserId = i,
+                    InkTitle = $"{i}",
+                    InkInfo = $"Some random info {i}"
+                });
+            }
+        }
+
+        Dictionary<int, Dictionary<string, List<string>>> filteredInfo = new();
+        for (int i = 1; i < testsInfo.Count - 1; i++)
+        {
+            if (testsInfo[i].UserId != testsInfo[i - 1].UserId)
+            {
+                filteredInfo[testsInfo[i].UserId] = new Dictionary<string, List<string>>
+                {
+                    { testsInfo[i].InkTitle, new() { testsInfo[i].InkInfo } }
+                };
+            }
+            else
+            {
+                filteredInfo[testsInfo[i].UserId][testsInfo[i].InkTitle].Add(testsInfo[i].InkInfo);
+            }
+        }
+
+        foreach (var fInfo in filteredInfo)
+        {
+            Console.Write($"Key: {fInfo.Key} ");
+            foreach (var fInfoDict in fInfo.Value)
+            {
+                Console.Write($"TitleKey: {fInfoDict.Key} ");
+                foreach (var fInfoListInDict in fInfoDict.Value)
+                {
+                    Console.Write($"ListValue: {fInfoListInDict}");
+                }
+            }
+            Console.WriteLine();
+        }
+
+       //await CheckForView();
        // string[] namesFor = { "Набор", "Инструмент", "Средство", "Комплекс" };
        // string[] pretext = { "для", "от", "чтобы", "затем", /"временного", /"переводного", "постоянного" };
        // string[] tatooContext = { "тату", "эскиз", "пирсинга", /"набросок", /"краски" };
@@ -39,26 +94,26 @@ internal class Program
        // }
     }
 
-    private async static Task GenerateTrashForInkProductAsync(string title, string lorem)
-    {
-        await using NpgsqlConnection conn = new("Host=localhost;Port=5432;Database=ink_realm;Username=postgres;Password=B&k34RPvvB12F");
-        await conn.OpenAsync();
-        decimal price;
-        bool res = decimal.TryParse((rnd.NextDouble() * rnd.NextInt64(100, 10_000)).ToString(), out price);
-        double chance = rnd.NextDouble();
-
-        await using var query = new NpgsqlCommand("INSERT INTO ink_products(title, description, each_price) VALUES ($1, $2, $3)", conn)
-        {
-            Parameters =
-                {
-                    new(){ Value = title },
-                    new(){ Value = lorem },
-                    new(){ Value = res == true ? price : 100.0d },
-                }
-        };
-        await query.ExecuteNonQueryAsync();
-        await conn.CloseAsync();
-    }
+    //private async static Task GenerateTrashForInkProductAsync(string title, string lorem)
+    //{
+    //    await using NpgsqlConnection conn = new("Host=localhost;Port=5432;Database=ink_realm;Username=postgres;Password=B&k34RPvvB12F");
+    //    await conn.OpenAsync();
+    //    decimal price;
+    //    bool res = decimal.TryParse((rnd.NextDouble() * rnd.NextInt64(100, 10_000)).ToString(), out price);
+    //    double chance = rnd.NextDouble();
+    //
+    //    await using var query = new NpgsqlCommand("INSERT INTO ink_products(title, description, each_price) VALUES ($1, $2, $3)", conn)
+    //    {
+    //        Parameters =
+    //            {
+    //                new(){ Value = title },
+    //                new(){ Value = lorem },
+    //                new(){ Value = res == true ? price : 100.0d },
+    //            }
+    //    };
+    //    await query.ExecuteNonQueryAsync();
+    //    await conn.CloseAsync();
+    //}
 
     
 }
