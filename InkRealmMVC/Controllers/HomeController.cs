@@ -65,11 +65,23 @@ namespace InkRealmMVC.Controllers
 
         public async Task<IActionResult> Master()
         {
+            List<InkService> allServices = await _context.InkServices.ToListAsync();
             List<MasterToServicesFetchModel> masterToServices = await GetMasterPageInfoList();
+            Dictionary<int, List<string>> mastersIdToServiceTitles = new();
 
+            foreach (var master in masterToServices)
+            {
+                if (mastersIdToServiceTitles.ContainsKey(master.MasterId))
+                    mastersIdToServiceTitles[master.MasterId].Add(master.ServiceTitle);
+                else
+                    mastersIdToServiceTitles.Add(master.MasterId, new() { master.ServiceTitle });
+            }
+            
             return await Task.Run(() => View(new MasterModel()
             {
-                MasterToServices = masterToServices
+                MasterToServiceTitles = mastersIdToServiceTitles,
+                AllServices = allServices,
+                MasterInfo = masterToServices
             }));
         }
 

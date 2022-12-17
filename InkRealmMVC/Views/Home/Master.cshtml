@@ -1,66 +1,98 @@
-﻿@model MasterModel
+﻿@using InkRealmMVC.Models.DbModels;
+@model MasterModel
 @{
     ViewData["Title"] = "Наши мастера";
-    var mastersInfo = Model.MasterToServices;
+
+    var mastersInfo = Model.MasterInfo;
+    var services = Model.AllServices;
+    Dictionary<int, HashSet<InkService>> masterIdToServices = new();
+    foreach (var master in mastersInfo)
+    {
+        if (masterIdToServices.ContainsKey(master.MasterId))
+            masterIdToServices[master.MasterId].Add(services.First(s => s.Title == master.ServiceTitle));
+        else
+            masterIdToServices.Add(master.MasterId, new(){ services.First(s => s.Title == master.ServiceTitle)});
+    }
 }
 
 <div class="col">
     <div class="row">
-        @if(mastersInfo.Count > 0)
+        @if(mastersInfo.Any())
         {
-            <div class="card col">
-                @if (mastersInfo[0].PhotoLink != null)
-                {
-                    <img class="card-img-top" src=@mastersInfo[0].PhotoLink/>
-                }
-                @if(mastersInfo[0].FatherName != null)
-                {
-                    <p class="card-title">@mastersInfo[0].FirstName @mastersInfo[0].SecondName @mastersInfo[0].FatherName</p>
-                }
-                else
-                {
-                    <p class="card-title">@mastersInfo[0].FirstName @mastersInfo[0].SecondName</p>
-                }
-                <p class="text-warning fs-5">@mastersInfo[0].Post</p>
-                <p>@mastersInfo[0].ServiceTitle</p>
-                <p>@mastersInfo[0].ServiceMinPrice.ToString()</p>
-                @if (mastersInfo[0].ServiceMaxPrice != null)
-                {
-                    <p>@mastersInfo[0].ServiceMinPrice.ToString()</p>
-                }
-            </div>
-            @*Здесь надо сделать так, чтобы отображались все сервисы каждого сотрудника*@
-            @for (int i = 2; i < mastersInfo.Count; i++)
+            for (int i = 1; i < mastersInfo.Count; i++)
             {
-                if(mastersInfo[i-1].MasterId != mastersInfo[i].MasterId)
+                if (mastersInfo[i].MasterId != mastersInfo[i - 1].MasterId)
                 {
-                    <div class="card col">
-                        @if (mastersInfo[i].PhotoLink != null)
+                    <div class="card col-lg-3 col-sm-6 me-3">
+                        @if (!string.IsNullOrEmpty(mastersInfo[i - 1].PhotoLink))
                         {
-                            <img class="card-img-top" src=@mastersInfo[0].PhotoLink />
-                        }
-                        @if(mastersInfo[i].FatherName != null)
-                        {
-                        <p class="card-title">@mastersInfo[i].FirstName @mastersInfo[i].SecondName @mastersInfo[i].FatherName</p>
+                            <img class="card-img-top" src=@mastersInfo[i - 1].PhotoLink />
                         }
                         else
                         {
-                        <p class="card-title">@mastersInfo[i].FirstName @mastersInfo[i].SecondName</p>
+                            <img class="card-img-top" src="~/img/app_img/tatoo_master_icon.png" />
                         }
-                        <p class="text-warning fs-5">@mastersInfo[i].Post</p>
-                        <p>@mastersInfo[i].ServiceTitle</p>
-                        <p>@mastersInfo[i].ServiceMinPrice.ToString()</p>
-                        @if (mastersInfo[i].ServiceMaxPrice != null)
-                        {
-                            <p>@mastersInfo[i].ServiceMinPrice.ToString()</p>
-                        }
+                        <div class="card-body">
+                            @if(!string.IsNullOrEmpty(mastersInfo[i - 1].FatherName))
+                            {
+                                <h5 class="card-title">@mastersInfo[i - 1].FirstName @mastersInfo[i - 1].SecondName @mastersInfo[i - 1].FatherName</h5>
+                            }
+                            else
+                            {
+                                <h5 class="card-title">@mastersInfo[i - 1].FirstName @mastersInfo[i - 1].SecondName</h5>
+                            }
+                            @if (mastersInfo[i - 1].ExperienceYears != null)
+                            {
+                                <p class="card-text">Мастер работает уже: <strong class="text-info">@mastersInfo[i - 1].ExperienceYears</strong> лет!</p>
+                            }
+                            <p class="card-text">Работает: @mastersInfo[i-1].Post</p>
+                            @foreach (var service in masterIdToServices[mastersInfo[i - 1].MasterId])
+                            {
+                                <div class="card-text btn btn-outline-info mb-2">
+                                    <strong class="row text-black fw-bold text-uppercase">@service.Title</strong>
+                                    <p class="text-normal">@service.Description</p>
+                                </div>
+                            }
+                        </div>
                     </div>
                 }
-                else
+                if (i == mastersInfo.Count - 1)
                 {
-                                
+                    <div class="card col-lg-3 col-sm-6 me-3">
+                        @if (!string.IsNullOrEmpty(mastersInfo[i].PhotoLink))
+                        {
+                            <img class="card-img-top" src=@mastersInfo[i].PhotoLink />
+                        }
+                        else
+                        {
+                            <img class="card-img-top" src="~/img/app_img/tatoo_master_icon.png" />
+                        }
+                        <div class="card-body">
+                            @if (!string.IsNullOrEmpty(mastersInfo[i].FatherName))
+                            {
+                                <h5 class="card-title">@mastersInfo[i].FirstName @mastersInfo[i].SecondName @mastersInfo[i].FatherName</h5>
+                            }
+                            else
+                            {
+                                <h5 class="card-title">@mastersInfo[i].FirstName @mastersInfo[i].SecondName</h5>
+                            }
+                            @if (mastersInfo[i].ExperienceYears != null)
+                            {
+                                <p class="card-text">Мастер работает уже: <strong class="text-info">@mastersInfo[i].ExperienceYears</strong> лет!</p>
+                            }
+                            <p class="card-text">Работает: @mastersInfo[i].Post</p>
+                            @foreach (var service in masterIdToServices[mastersInfo[i].MasterId])
+                            {
+                                <div class="card-text btn btn-outline-info ps-3 mb-2">
+                                    <strong class="row text-black fw-bold text-uppercase">@service.Title</strong>
+                                    <p class="text-normal">@service.Description</p>
+                                </div>
+                            }
+                        </div>
+                    </div>
                 }
-            }    
-        }    
+
+            }
+        }
     </div>
 </div>
