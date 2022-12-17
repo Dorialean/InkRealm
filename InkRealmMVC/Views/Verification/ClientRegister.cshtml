@@ -6,19 +6,19 @@
 }
 <form asp-controller="Verification" asp-action="ClientRegister" method="post">
     <label class=@labelsClasses asp-for="Login">Введите логин</label>
-    <input class=@formsClasses type="text" asp-for="Login" placeholder="Логин"/>
+    <input class=@formsClasses type="text" required="required" asp-for="Login" placeholder="Логин"/>
 
     <label class=@labelsClasses asp-for="Password">Введите пароль</label>
-    <input class=@formsClasses type="password" asp-for="Password" placeholder="Пароль"/>
+    <input class=@formsClasses type="password" required="required" asp-for="Password" placeholder="Пароль"/>
 
     <label class=@labelsClasses for="same_pass">Повторите пароль</label>
-    <input class=@formsClasses id="same_pass" type="password" placeholder="Повторение пароля"/>
+    <input class=@formsClasses id="same_pass" required="required" type="password" placeholder="Повторение пароля"/>
 
     <label class=@labelsClasses asp-for="FirstName">Введите имя</label>
-    <input class=@formsClasses type="text" asp-for="FirstName" placeholder="Иван"/>
+    <input class=@formsClasses type="text" required="required" asp-for="FirstName" placeholder="Иван"/>
 
     <label class=@labelsClasses asp-for="Surname">Введите фамилию</label>
-    <input class=@formsClasses type="text" asp-for="Surname" placeholder="Иванов"/>
+    <input class=@formsClasses type="text" required="required" asp-for="Surname" placeholder="Иванов"/>
 
     <label class=@labelsClasses asp-for="FatherName">Введите отчество</label>
     <input class=@formsClasses type="text" asp-for="FatherName" placeholder="Иваныч"/>
@@ -27,7 +27,11 @@
     <input class=@formsClasses type="tel" asp-for="MobilePhone" placeholder="+7 (999) 999-99-99"/>
 
     <label class=@labelsClasses asp-for="Email">Введите почту</label>
-    <input class=@formsClasses type="email" asp-for="Email" placeholder="abra@codabra.com"/>
+    <input class=@formsClasses type="email" asp-for="Email" required="required" placeholder="abra@codabra.com"/>
 
-    <input class="mt-3 form-control btn btn-danger" type="submit" value="Зарегистрироваться" />
+    <input class="mt-3 form-control btn btn-danger disabled" type="submit" value="Зарегистрироваться" />
 </form>
+
+@section Scripts{
+    <script src="~/ts/client_reg.js"></script>
+}
