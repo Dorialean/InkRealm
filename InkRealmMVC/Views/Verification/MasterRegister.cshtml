@@ -18,7 +18,7 @@
     @Html.PasswordFor(m => m.Password, new { @class = formsClasses, placeholder="Пароль" })
 
     <label class="row col-form-label">Повторите пароль</label>
-    <input class="row mt-1 mb-1 form-control" type="password" id="passwordCheck" placeholder="Повторите пароль"/>
+    <input class="row mt-1 mb-1 form-control" type="password" id="PasswordCheck" placeholder="Повторите пароль"/>
 
     <label class="row col-form-label">Введите Имя</label>
     @Html.TextBoxFor(m => m.FirstName, new { @class = formsClasses, placeholder="Имя" })
@@ -46,5 +46,9 @@
     <label class="row col-form-label">Выберите инструменты, которые Вам пригодятся</label>
     @Html.ListBoxFor(m => m.SuppliesTitles, supplies, new {@class = "row mt-1 mb-1 form-select"})
 
-    <input class="row mt-1 mb-1 btn btn-outline-dark" type="submit" value="Зарегистрироваться" />
+    <input id="Submit" class="row mt-1 mb-1 btn btn-outline-dark" type="submit" value="Зарегистрироваться" />
+}
+
+@section Scripts{
+    <script src="~/ts/master_reg.js"></script>
 }
