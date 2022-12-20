@@ -33,9 +33,11 @@ namespace InkRealmMVC.Controllers
                 studio = _context.Studios.Find(master.StudioId);
                 services = (from mServs in _context.MastersServices.ToList() join servs in _context.InkServices.ToList() 
                                 on mServs.ServiceId equals servs.ServiceId
+                            where mServs.MasterId == master.MasterId
                            select servs).ToList(); 
                 supplies = (from mSupl in _context.MastersSupplies.ToList() join supl in _context.InkSupplies.ToList()
                                 on mSupl.SuplId equals supl.SuplId
+                            where mSupl.MasterId == master.MasterId
                             select supl).ToList();
 
                 return View(new MasterSpaceModel()
