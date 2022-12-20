@@ -11,7 +11,7 @@ public partial class Order
 {
     [Key]
     [Column("order_id")]
-    public Guid OrderId { get; set; }
+    public Guid OrderId { get; set; } = Guid.NewGuid();
 
     [Column("product_id")]
     public Guid? ProductId { get; set; }
@@ -22,6 +22,7 @@ public partial class Order
     [Column("client_id")]
     public int ClientId { get; set; }
 
-    [Column("finished_date",TypeName = "timestamp without time zone")]
-    public DateTime FinishedDate { get; set; }
-}
+    [Column("finished_date")]
+    public DateTime? FinishedDate { get; set; }
+
+    }

@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "noImplicitAny": false,
+    "noEmitOnError": true,
+    "removeComments": false,
+    "sourceMap": true,
+    "target": "es2016",
+    "allowJs": true
+  },
+  "exclude": [
+    "node_modules",
+    "wwwroot"
+  ]
+}

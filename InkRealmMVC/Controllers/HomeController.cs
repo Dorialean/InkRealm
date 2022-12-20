@@ -91,9 +91,15 @@ namespace InkRealmMVC.Controllers
             using (_context)
             {
                 List<InkProduct> allProducts = await _context.InkProducts.ToListAsync();
+                InkClient? inkClient = null;
+                if (User.IsInRole(Role.InkClient))
+                {
+                    inkClient = await _context.InkClients.FirstOrDefaultAsync(c => c.Login == User.Identity.Name);
+                }
                 return await Task.Run(() => View(new ShopModel()
                 {
-                    AllProducts = allProducts
+                    AllProducts = allProducts,
+                    Client = inkClient
                 }));
             }
         }

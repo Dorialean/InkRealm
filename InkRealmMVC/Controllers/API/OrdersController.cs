@@ -83,14 +83,14 @@ namespace InkRealmMVC.Controllers.API
         // POST: api/Orders
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Order>> PostOrder(Order order)
+        public async Task<ActionResult<Order>> PostOrder([FromBody]Order order)
         {
             if (_context.Orders == null)
             {
                 return Problem("Entity set 'InkRealmContext.Orders'  is null.");
             }
             _context.Orders.Add(order);
-            await _context.SaveChangesAsync();
+            _context.SaveChanges();
 
             return CreatedAtAction("GetOrder", new { id = order.OrderId }, order);
         }

@@ -22,6 +22,8 @@
     <EmbeddedResource Remove="Models\NewDbModels\**" />
     <None Remove="Models\NewDbModels\**" />
     <TypeScriptCompile Remove="Models\NewDbModels\**" />
+    <Content Remove="wwwroot\js\shop.js" />
+    <TypeScriptCompile Include="wwwroot\js\shop.js" />
     <TypeScriptCompile Include="wwwroot\ts\auth.ts" />
     <TypeScriptCompile Include="wwwroot\ts\client_reg.ts" />
   </ItemGroup>

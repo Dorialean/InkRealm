@@ -16,6 +16,7 @@ public partial class InkRealmContext : DbContext
     public InkRealmContext(DbContextOptions<InkRealmContext> options)
         : base(options)
     {
+
     }
 
     public virtual DbSet<InkClientService> InkClientServices { get; set; }

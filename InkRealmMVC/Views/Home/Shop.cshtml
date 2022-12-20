@@ -26,12 +26,11 @@
                             <p class="card-text p-3">@p.Description</p>
                         }
                         <p class="card-text">Цена: <strong class="text-success">@p.EachPrice ₽</strong></p>
-                        <button class="btn btn-success">Добавить в корзину</button>
                     </div>
                     @if (User.IsInRole(Role.InkClient))
                     {
-                        string prodId = $"product {p.ProductId}";
-                        <button id=@prodId>Купить</button>
+                        string prodId = $"product_{p.ProductId.ToString()}";
+                        <button class="btn btn-outline-success" id=@prodId>Купить</button>
                     }
                 </div>
             }
@@ -40,5 +39,8 @@
 </div>
 
 @section Scripts{
-
+    <script>
+        const clientId = @Model.Client?.ClientId;
+    </script>
+    <script src="~/js/shop.js"></script>
 }
