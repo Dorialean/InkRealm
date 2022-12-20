@@ -28,6 +28,11 @@
                         <p class="card-text">Цена: <strong class="text-success">@p.EachPrice ₽</strong></p>
                         <button class="btn btn-success">Добавить в корзину</button>
                     </div>
+                    @if (User.IsInRole(Role.InkClient))
+                    {
+                        string prodId = $"product {p.ProductId}";
+                        <button id=@prodId>Купить</button>
+                    }
                 </div>
             }
         }
