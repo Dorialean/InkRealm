@@ -28,6 +28,7 @@ namespace InkRealmMVC.Controllers
                 List<MasterReviews> reviews = _context.MasterReviews.Select(r => r).Where(r => r.ClientId == inkClient.ClientId).ToList();
                 List<InkProduct> orederedProducts = (from prod in _context.InkProducts.ToList() join ord in _context.Orders.ToList()
                                                       on prod.ProductId equals ord.ProductId
+                                                     where ord.ClientId == inkClient.ClientId
                                                      select prod).ToList();
                                                   
 

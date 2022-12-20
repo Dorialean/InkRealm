@@ -12,14 +12,14 @@ $(function () {
     const allInputBoxes = $("input");
     allInputBoxes.each(() => {
         $(this).hover(() => {
-            if (IsAllInputsValid())
+            if (isAllInputsValid())
                 revealButton(submitBtn);
         }, () => {
-            if (IsAllInputsValid())
+            if (isAllInputsValid())
                 revealButton(submitBtn);
         });
     });
-    function IsAllInputsValid() {
+    function isAllInputsValid() {
         if (!isValidLogin(loginBox.val())) {
             return false;
         }
