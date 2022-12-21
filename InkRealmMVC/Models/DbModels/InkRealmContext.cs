@@ -20,8 +20,7 @@ public partial class InkRealmContext : DbContext
     }
 
     public virtual DbSet<InkClientService> InkClientServices { get; set; }
-    
-    public virtual DbSet<InkClientOrder> InkClientOrders { get; set; }
+   
 
     public virtual DbSet<InkClient> InkClients { get; set; }
 

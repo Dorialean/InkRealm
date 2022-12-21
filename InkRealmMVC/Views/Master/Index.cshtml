@@ -8,6 +8,10 @@
     var studio = Model.MasterStudio;
     var services = Model.MasterServices;
     var supplies = Model.MastersSupplies;
+    var work = Model.MastersServiceWork;
+    var neededServices = Model.NeededServices;
+    var clients = Model.MasterClients;
+
     OtherInfoModel? otherInfo = null;
     if (!string.IsNullOrEmpty(master.OtherInfo))
     {
@@ -57,12 +61,29 @@
                     <img class="rounded" src=@photoLink style="max-width:200px;max-height:200px;"/>
                 </div>
             }
+        }
 
+        @if (work.Any())
+        {
+            <div class="row border pb-2">
+                <p class="row fs-2">Ваша работа на сегодня:</p>
+                <div class="alert-success border border-3 border-dark rounded rounded-2">
+                    @foreach (var w in work)
+                    {
+                        InkService? workService = neededServices?.FirstOrDefault(s => s.ServiceId == w.ServiceId);
+                        InkClient? clientInfoForService = clients?.FirstOrDefault(c => c.ClientId == w.ClientId);
+                        <p class="fs-4">@workService.Title</p>
+                        <p class="fs-5">@clientInfoForService.FirstName @clientInfoForService.Surname</p>
+                        <p class="text-uppercase">@w.ServiceDate.ToString("dd.MM.yyyy")</p>
+                        <button class="btn btn-outline-success mb-2">Отметить, как выполненное</button>
+                    }
+                </div>
+            </div>
         }
 
         
 
-        @if (supplies.Count > 0)
+        @if (supplies.Any())
         {
             <div class="row border border-3 mt-2 mb-2">
                 <p class="gulag-text fs-4 mt-2">Предоставленное Вам оборудование:</p>
@@ -82,7 +103,7 @@
             </div>
         }
 
-        @if (services.Count > 0)
+        @if (services.Any())
         {
             <div class="row border border-3">
                 <p class="row fs-5">Вы предоставляете такие услуги:</p>

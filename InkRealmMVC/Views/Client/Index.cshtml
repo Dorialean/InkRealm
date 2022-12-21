@@ -22,16 +22,21 @@
 
     @if (orderedProducts.Any())
     {
+        <p class="row fw-normal fs-3">Ваши заказы:</p>
         <div class="row border border-3">
             @foreach (var prod in orderedProducts)
             {
-                <p class="row fs-3">@prod.Title</p>
-                <p class="row fs-4">@prod.Description</p>
-                @if (prod.PhotoLink != null)
-                {
-                    <img src=@prod.PhotoLink style="max-height: 30px;max-width: 30px;"/>
-                }
-                <p class="row">@prod.EachPrice.ToString()</p>
+                <div class="card col-4 me-1">
+                    <div class="card-body">
+                        @if (prod.PhotoLink != null)
+                        {
+                            <img class="card-img-top" src=@prod.PhotoLink style="max-height: 30px;max-width: 30px;"/>
+                        }
+                        <p class="row fs-3 card-title fw-bold">@prod.Title</p>
+                        <p class="row card-text">@prod.Description</p>
+                        <p class="row card-text text-success">Цена: @prod.EachPrice.ToString()</p>
+                    </div>
+                </div>
             }
         </div>
     }

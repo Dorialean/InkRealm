@@ -1,2 +1,21 @@
-﻿@{
+﻿@model AppointmentClient
+@{
+    ViewData["Title"] = "Запись к мастеру";
+    var allMasters = Model.AllMasters;
+    var selectedMasters = new SelectList(allMasters, "MasterId", "FirstName");
+    var allServices = Model.AllServices;
+    var selectedServices = new SelectList(allServices, "ServiceId", "Title");
 }
+<div class="col">
+    <div class="row">
+        <form class="form-group" asp-action="AppointmentToMaster" method="post">
+            <select class="form-select" asp-for="ChoosedMasterId" asp-items="selectedMasters"></select>
+
+            <select class="form-select mt-2" asp-for="ChoosedServiceId" asp-items="selectedServices"></select>
+
+            <input class="form-control mt-3" min=@DateTime.Now.AddHours(1) type="date" asp-for="ServiceDate" />
+
+            <input class="mt-4 btn btn-primary form-control" type="submit" />
+        </form>
+    </div>
+</div>

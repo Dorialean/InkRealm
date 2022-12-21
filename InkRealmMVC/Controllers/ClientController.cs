@@ -53,6 +53,42 @@ namespace InkRealmMVC.Controllers
             }
         }
 
-        
+        [HttpGet]
+        public async Task<IActionResult> AppointmentToMaster()
+        {
+            using (_context)
+            {
+                InkClient client = await _context.InkClients.FirstAsync(c => c.Login == User.Identity.Name);
+                List<InkMaster> allMasters = await _context.InkMasters.ToListAsync();
+                List<InkService> allServices = await _context.InkServices.ToListAsync();
+
+                return await Task.Run(() => View(new AppointmentClient()
+                {
+                    Client = client,
+                    AllMasters = allMasters,
+                    AllServices = allServices
+                }));
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AppointmentToMaster(AppointmentClient clientChoosed)
+        {
+            using (_context)
+            {
+                InkClientService clientService = new()
+                {
+                    ClientId = _context.InkClients.First(c => c.Login == User.Identity.Name).ClientId,
+                    MasterId = clientChoosed.ChoosedMasterId.Value,
+                    ServiceId = clientChoosed.ChoosedServiceId.Value,
+                    ServiceDate = clientChoosed.ServiceDate.Value
+                };
+                await _context.InkClientServices.AddAsync(clientService);
+                await _context.SaveChangesAsync();
+            }
+            return await Task.Run(() => RedirectToAction("Index"));
+        }
+
+
     }
 }

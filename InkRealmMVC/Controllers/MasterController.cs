@@ -45,12 +45,26 @@ namespace InkRealmMVC.Controllers
                             where mSupl.MasterId == master.MasterId
                             select supl).ToList();
 
+                List<InkClientService> masterServices = _context.InkClientServices.Select(m => m).Where(s => s.MasterId == master.MasterId).ToList();
+                List<InkService> neededServices = (from mServ in masterServices
+                                                   join aServ in _context.InkServices.ToList()
+                                                   on mServ.ServiceId equals aServ.ServiceId
+                                                   where mServ.MasterId == master.MasterId
+                                                   select aServ).ToList();
+                List<InkClient> mastersClient = (from mServ in masterServices
+                                                 join aClient in _context.InkClients.ToList()
+                                                 on mServ.ClientId equals aClient.ClientId
+                                                 where mServ.MasterId == master.MasterId
+                                                 select aClient).ToList();
                 return View(new MasterSpaceModel()
                 {
                     Master = master,
                     MasterStudio = studio,
                     MasterServices = services,
-                    MastersSupplies = supplies
+                    MasterClients = mastersClient,
+                    MastersSupplies = supplies,
+                    NeededServices = neededServices,
+                    MastersServiceWork = masterServices,
                 });
             }
         }
