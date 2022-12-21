@@ -82,7 +82,6 @@
             </div>
         }
 
-        @*Добавить, когда будут услуги*@
         @if (services.Count > 0)
         {
             <div class="row border border-3">
@@ -98,9 +97,8 @@
                     }
                 }
             </div>
-            @*Здесь отдельная страница*@
-            <a class="btn btn-success mb-2">
-                <p сlass="text-wrap">Добавить ещё услуги</p>
+            <a class="btn btn-success mb-3 mt-1">
+                <span сlass="">Добавить ещё услуги</span>
             </a>
         }
 
@@ -110,6 +108,15 @@
             </p>
             <p class="fs-6">Где аренда обходится в @studio.RentalPricePerMonth?.ToString("#")₽</p>
         </span>
+
+        <div class="row mb-2"> 
+            <h5 class="text-center street-text mb-3"> Добавить новые вещи:</h5>
+            <div class="row">
+                <a asp-action="AddNewStudio" class="col btn btn-secondary me-2">Добавить новую студию</a>
+                <a asp-action="AddNewProduct" class="col btn btn-primary me-2">Добавить новый продукт</a>
+                <a asp-action="AddNewService" class="col btn btn-outline-info">Добавить новую услугу</a>
+            </div>
+        </div>
     </div> 
 
     <div class="row flex-row">

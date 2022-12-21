@@ -263,7 +263,7 @@ namespace InkRealmMVC.Controllers
             {
                 await file.CopyToAsync(fileStream);
             }
-            return picturePath;
+            return picturePath.Substring(picturePath.IndexOf("img") - 1).Replace('\\', '/');
 
         }
 

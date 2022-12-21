@@ -11,7 +11,7 @@ public partial class Studio
 {
     [Key]
     [Column("studio_id")]
-    public Guid StudioId { get; set; }
+    public Guid StudioId { get; set; } = Guid.NewGuid();
 
     [Column("address")]
     [Required]

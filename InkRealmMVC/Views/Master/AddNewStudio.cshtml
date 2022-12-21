@@ -1,0 +1,20 @@
+﻿@model StudioAppend
+@{
+    ViewData["Title"] = "Добавить новую студию";
+}
+
+<div class="row">
+    <div class="col">
+        <form class="form-group" asp-action="AddNewStudio" asp-controller="Master" method="post" enctype="multipart/form-data">
+            <label class="form-label">Введите адресс студии*</label>
+            <input class="form-control" type="text" asp-for="Address" />
+            
+            <label class="form-label">Введите цену аренды за месяц</label>
+            <input class="form-control mb-3" type="number" min="0" asp-for="RentalPricePerMonth" />
+
+            <input class="row mt-3 mb-2 form-control" type="file" asp-for="Photo" />
+
+            <input class="form-control btn btn-primary" type="submit" />
+        </form>
+    </div>
+</div>
