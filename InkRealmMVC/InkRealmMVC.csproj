@@ -46,6 +46,7 @@
     <Folder Include="wwwroot\img\clients_img\" />
     <Folder Include="wwwroot\img\masters_img\info\" />
     <Folder Include="wwwroot\img\masters_img\works\" />
+    <Folder Include="wwwroot\img\prod_img\" />
   </ItemGroup>
 
 </Project>

@@ -15,6 +15,7 @@ namespace InkRealmMVC.Controllers
 
         const string MASTER_PICTURE_INFO_PATH = "wwwroot/img/masters_img/info";
         const string STUDIO_PICTURE_PATH = "wwwroot/img/studios_img";
+        const string PRODUCT_PICTURE_PATH = "wwwroot/img/prod_img";
         
 
         public MasterController(InkRealmContext context)
@@ -97,7 +98,7 @@ namespace InkRealmMVC.Controllers
                 if (product.Photo != null)
                 {
                     var file = product.Photo;
-                    productToAdd.PhotoLink = await AddPictureAsync(file, STUDIO_PICTURE_PATH);
+                    productToAdd.PhotoLink = await AddPictureAsync(file, PRODUCT_PICTURE_PATH);
                 }
 
                 await _context.InkProducts.AddAsync(productToAdd);
