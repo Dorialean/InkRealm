@@ -6,7 +6,8 @@
     var orderedProducts = Model.OrderedProducts;
     var reviews = Model.ClientReviewd;
     var masters = Model.MastersToCome;
-    var services = Model.ClientServices;
+    var services = Model.NeededServices;
+    var clientServiceInfo = Model.ClientServices;
 }
 
 <div class="col">
@@ -48,6 +49,27 @@
             }
         </div>
     }
+
+    @if (services.Any())
+    {
+        <div class="row mt-4 rounded rounded-2 border border-2 border-info mb-2 p-2">
+            @foreach (var serv in services)
+            {
+                var servDate = clientServiceInfo.FirstOrDefault(cs => cs.ServiceId == serv.ServiceId)?.ServiceDate;
+                <div class="card col-4">
+                    <div class="card-body">
+                        <p class="card-title">@serv.Title</p>
+                        <p class="card-text">@serv.Description</p>
+                        @if (servDate != null)
+                        {
+                            <p class="card-text">Вы записаны на: @servDate?.ToString("MM/dd/yyyy HH:mm")</p>
+                        }
+                    </div>
+                </div>
+            }
+        </div>    
+    }
+    <a class="row btn btn-primary mb-4" asp-action="AppointmentToMaster">Записаться на приём</a>
 
     <div class="row flex-row">
         <a class="btn btn-danger row justify-self-center" asp-controller="Verification" asp-action="Logout">
