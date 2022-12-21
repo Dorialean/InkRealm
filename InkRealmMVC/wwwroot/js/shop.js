@@ -1,6 +1,5 @@
 ﻿$(function () {
     let buyButtons = $("button[id^='product']");
-
     buyButtons.each((index, btn) => {
         $(btn).click(() => {
             let prodId = $(btn).attr('id').slice($(btn).attr('id').lastIndexOf("_") + 1);
@@ -18,11 +17,11 @@
                     },
                     body: JSON.stringify(data)
                 })
-                .catch(err => alert(err));
+                    .catch(err => alert(err));
             }
             else {
                 alert("Вы не зарегистированы.");
             }
         });
-    });
+    }); 
 });

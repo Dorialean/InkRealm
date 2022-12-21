@@ -6,41 +6,45 @@
 <div class="col">
     <div class="row">
         <div class="row">
-            <input class="col-lg-10 me-lg-4" type="text" placeholder="Введите название или описание товара, что Вы ищете" aria-describedby="basic-addon1" />
-            <button class="btn btn-primary col">Поиск</button>
+            <input id="SearchBox" class="col-lg-10 me-lg-4" type="text" placeholder="Введите название или описание товара, что Вы ищете" aria-describedby="basic-addon1" />
+            <button id="SearchBtn" class="btn btn-primary col">Поиск</button>
         </div>
-        
-        @if (products.Any())
-        {
-            foreach (var p in products)
+        <div id="SearchRes" class="row">
+            @if (products.Any())
             {
-                <div class="col-3 card me-3 mt-3 mb-2">
-                    @if (!string.IsNullOrEmpty(p.PhotoLink))
-                    {
-                        <img class="card-img-top" src=@p.PhotoLink style="max-height:200px;max-width:200px;"/>
-                    }
-                    <div class="card-body">
-                        <p class="card-title fw-bold h3">@p.Title</p>
-                        @if (!string.IsNullOrEmpty(p.Description))
+                foreach (var p in products)
+                {
+                    <div class="col-3 card me-3 mt-3 mb-2">
+                        @if (!string.IsNullOrEmpty(p.PhotoLink))
                         {
-                            <p class="card-text p-3">@p.Description</p>
+                            <img class="card-img-top" src=@p.PhotoLink style="max-height:200px;max-width:200px;" />
                         }
-                        <p class="card-text">Цена: <strong class="text-success">@p.EachPrice ₽</strong></p>
+                        <div class="card-body">
+                            <p class="card-title fw-bold h3">@p.Title</p>
+                            @if (!string.IsNullOrEmpty(p.Description))
+                            {
+                                <p class="card-text p-3">@p.Description</p>
+                            }
+                            <p class="card-text">Цена: <strong class="text-success">@p.EachPrice ₽</strong></p>
+                        </div>
+                        @if (User.IsInRole(Role.InkClient))
+                        {
+                            string prodId = $"product_{p.ProductId.ToString()}";
+                            <button class="btn btn-outline-success" id=@prodId>Купить</button>
+                        }
                     </div>
-                    @if (User.IsInRole(Role.InkClient))
-                    {
-                        string prodId = $"product_{p.ProductId.ToString()}";
-                        <button class="btn btn-outline-success" id=@prodId>Купить</button>
-                    }
-                </div>
+                }
             }
-        }
+        </div>
     </div>
 </div>
 
 @section Scripts{
     <script>
-        const clientId = @Model.Client?.ClientId;
+        const clientId = @Html.Raw(Json.Serialize(Model.Client?.ClientId));
+        const allProducts = @Html.Raw(Json.Serialize(products));
+        const isUserInClientRole = @User.IsInRole(Role.InkClient).ToString().ToLower();
     </script>
     <script src="~/js/shop.js"></script>
+    <script src="~/js/shop_search.js"></script>
 }
