@@ -11,7 +11,7 @@ public partial class InkProduct
 {
     [Key]
     [Column("product_id")]
-    public Guid ProductId { get; set; }
+    public Guid ProductId { get; set; } = Guid.NewGuid();
 
     [Column("title")]
     [StringLength(50)]

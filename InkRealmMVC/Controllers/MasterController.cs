@@ -82,6 +82,29 @@ namespace InkRealmMVC.Controllers
         [HttpGet]
         public async Task<IActionResult> AddNewProduct() => await Task.Run(View);
 
+        [HttpPost]
+        public async Task<IActionResult> AddNewProduct(ProductAppend product)
+        {
+            using (_context)
+            {
+                InkProduct productToAdd = new()
+                {
+                    Title = product.Title,
+                    Description = product.Description,
+                    EachPrice = product.EachPrice
+                };
+
+                if (product.Photo != null)
+                {
+                    var file = product.Photo;
+                    productToAdd.PhotoLink = await AddPictureAsync(file, STUDIO_PICTURE_PATH);
+                }
+
+                await _context.InkProducts.AddAsync(productToAdd);
+                await _context.SaveChangesAsync();
+            }
+            return await Task.Run(() => RedirectToAction("Index"));
+        }
 
 
 
