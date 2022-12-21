@@ -1,3 +1,25 @@
-﻿@{
+﻿@using InkRealmMVC.Models.DbModels;
+@model InkService
+@{
     ViewData["Title"] = "Добавить новую услугу";
 }
+
+<div class="row">
+    <div class="col">
+        <form class="form-group" asp-action="AddNewService" asp-controller="Master" method="post">
+            <label class="form-label">Введите название услуги*</label>
+            <input class="form-control" type="text" asp-for="Title" />
+
+            <label class="form-label">Введите описание услуги*</label>
+            <input class="form-control" type="text" asp-for="Description" />
+
+            <label class="form-label">Введите минимальную цену за данную услугу*</label>
+            <input class="form-control mb-3" type="number" min="0" asp-for="MinPrice" />
+
+            <label class="form-label">Введите максимальную цену за данную услугу</label>
+            <input class="form-control mb-3" type="number" min="0" asp-for="MaxPrice" />
+
+            <input class="form-control btn btn-primary" type="submit" />
+        </form>
+    </div>
+</div>

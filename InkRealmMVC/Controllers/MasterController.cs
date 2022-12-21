@@ -2,6 +2,7 @@
 using InkRealmMVC.Models.DbModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Immutable;
 using System.Diagnostics.Metrics;
 using static System.Net.Mime.MediaTypeNames;
@@ -107,6 +108,20 @@ namespace InkRealmMVC.Controllers
             return await Task.Run(() => RedirectToAction("Index"));
         }
 
+        [HttpGet]
+        public async Task<IActionResult> AddNewService() => await Task.Run(View);
+
+        [HttpPost]
+        public async Task<IActionResult> AddNewService(InkService service)
+        {
+            using (_context)
+            {
+                service.ServiceId = await _context.InkServices.CountAsync() + 1;
+                await _context.InkServices.AddAsync(service);
+                await _context.SaveChangesAsync();
+            }
+            return await Task.Run(() => RedirectToAction("Index"));
+        }
 
 
 
