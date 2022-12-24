@@ -9,8 +9,6 @@ namespace InkRealmMVC.Models
         public List<InkProduct>? InkProducts { get; set; }
 
         public List<InkMaster>? AllMasters { get; set; }
-        public Dictionary<InkMaster, List<MasterReviews>>? MasterToReviews { get; set; }
-        public Dictionary<InkMaster, List<MasterReviews>>? MasterToServices { get; set; }
         public List<Studio> AllStudios { get; set; }
     }
 }

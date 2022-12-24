@@ -34,7 +34,6 @@ namespace InkRealmMVC.Controllers
                                                  where cServ.ClientId == inkClient.ClientId
                                                  select mast).ToList();
 
-                List<MasterReviews> reviews = await _context.MasterReviews.Select(r => r).Where(r => r.ClientId == inkClient.ClientId).ToListAsync();
                 List<InkProduct> orederedProducts = (from prod in await _context.InkProducts.ToListAsync() join ord in await _context.Orders.ToListAsync()
                                                       on prod.ProductId equals ord.ProductId
                                                      where ord.ClientId == inkClient.ClientId
@@ -47,7 +46,6 @@ namespace InkRealmMVC.Controllers
                     NeededServices = neededServices,
                     MastersToCome = mastersComeTo,
                     ClientServices = clientServices,
-                    ClientReviewd = reviews,
                     OrderedProducts = orederedProducts
                 }));
             }

@@ -33,9 +33,6 @@ public partial class InkMaster
     [Column("experience_years")]
     public int? ExperienceYears { get; set; }
 
-    [Column("other_info", TypeName = "jsonb")]
-    public string? OtherInfo { get; set; }
-
     [Column("studio_id")]
     [Required]
     public Guid StudioId { get; set; }

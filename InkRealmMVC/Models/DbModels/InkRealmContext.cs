@@ -32,7 +32,6 @@ public partial class InkRealmContext : DbContext
 
     public virtual DbSet<InkSupply> InkSupplies { get; set; }
 
-    public virtual DbSet<MasterReviews> MasterReviews { get; set; }
 
     public virtual DbSet<MastersSupply> MastersSupplies { get; set; }
 

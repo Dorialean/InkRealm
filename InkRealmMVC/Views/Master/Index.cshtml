@@ -11,19 +11,12 @@
     var work = Model.MastersServiceWork;
     var neededServices = Model.NeededServices;
     var clients = Model.MasterClients;
-
-    OtherInfoModel? otherInfo = null;
-    if (!string.IsNullOrEmpty(master.OtherInfo))
-    {
-        otherInfo = JsonConvert.DeserializeObject<OtherInfoModel>(master.OtherInfo as string);
-    }
 }
 
 <div class="col">
     <div class="row">
         @if (!(string.IsNullOrWhiteSpace(master.PhotoLink) || string.IsNullOrEmpty(master.PhotoLink)))
         {
-            //Надо будет протестировать с картинкой
             <img class="col-2 me-1 img-thumbnail" src=@master.PhotoLink style="max-width:60px;max-height:45px;" />
         }
         else
@@ -32,11 +25,9 @@
         }
         <span class="col fs-3 row multiround-text mb-1">Ваше имя: @master.FirstName</span>
 
-        @*Добавить логику в ajax*@
         <div class="col">
             <label class="form-label">Хотите сменить фото профиля?</label>
             <input id="info_photo" class="form-control" type="file" />
-            @*В ajax просто убрать класс visually-hidden после ввода файла*@
             <div class="d-flex justify-content-center visually-hidden">
                 <button class="btn btn-primary mt-1">Сменить фото</button>
             </div>
@@ -53,16 +44,6 @@
             <pre class="fs-5 row fw-light mb-2">Ваша фамилия: @master.SecondName    | Отчество: @master.FatherName</pre>
         }
 
-        @if (otherInfo != null)
-        {
-            foreach (var photoLink in otherInfo.WorkPhotoLink)
-            {
-                <div class="col-lg-3 col-md-6 me-1">
-                    <img class="rounded" src=@photoLink style="max-width:200px;max-height:200px;"/>
-                </div>
-            }
-        }
-
         @if (work.Any())
         {
             <div class="row border pb-2">
@@ -72,10 +53,13 @@
                     {
                         InkService? workService = neededServices?.FirstOrDefault(s => s.ServiceId == w.ServiceId);
                         InkClient? clientInfoForService = clients?.FirstOrDefault(c => c.ClientId == w.ClientId);
-                        <p class="fs-4">@workService.Title</p>
-                        <p class="fs-5">@clientInfoForService.FirstName @clientInfoForService.Surname</p>
-                        <p class="text-uppercase">@w.ServiceDate.ToString("dd.MM.yyyy")</p>
-                        <button class="btn btn-outline-success mb-2">Отметить, как выполненное</button>
+                        if (w.ServiceFinished == null)
+                        {
+                            <p class="fs-4">@workService.Title</p>
+                            <p class="fs-5">@clientInfoForService.FirstName @clientInfoForService.Surname</p>
+                            <p class="text-uppercase">@w.ServiceDate.ToString("dd.MM.yyyy")</p>
+                            <button id=@string.Join('_', w.ClientId, w.MasterId, w.ServiceId) class="btn btn-outline-success mb-2">Отметить, как выполненное</button>
+                        }
                     }
                 </div>
             </div>
@@ -150,5 +134,6 @@
 
 @section Scripts{
     <link rel="stylesheet" href="~/css/master_space.css" asp-append-version="true" />
+    <script src="~/js/master_work.js"></script>
 }
 

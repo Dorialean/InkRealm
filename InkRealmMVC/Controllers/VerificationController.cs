@@ -29,7 +29,6 @@ namespace InkRealmMVC.Controllers
             _context = context;
         }
 
-        //TODO:Здесь хардкод, надо будет получать из ENUM в БД
         [HttpGet]
         public async Task<IActionResult> MasterRegister()
         {
@@ -115,7 +114,7 @@ namespace InkRealmMVC.Controllers
                         };
                         await cmd.ExecuteNonQueryAsync();
                     }
-                    //TODO:Добавить возможность юзеру выбрать количество
+
                     query = "INSERT INTO masters_supplies(master_id, supl_id, amount) VALUES ($1, $2, $3)";
                     foreach (Guid suplId in masterChoosedSupplies.Select(s => s.SuplId).ToArray())
                     {

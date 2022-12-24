@@ -4,7 +4,6 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     var client = Model.Client;
     var orderedProducts = Model.OrderedProducts;
-    var reviews = Model.ClientReviewd;
     var masters = Model.MastersToCome;
     var services = Model.NeededServices;
     var clientServiceInfo = Model.ClientServices;
@@ -40,35 +39,18 @@
             }
         </div>
     }
-    
-    @if (reviews.Any())
-    {
-        <div class="row">
-            @foreach (var rev in reviews)
-            {
-                if (rev.Rating != null)
-                {
-                    <p class="row">@rev.Rating.ToString()</p>    
-                }
-                <p class="row">@rev.Review</p>
-            }
-        </div>
-    }
 
     @if (services.Any())
     {
+        var zippedInfo = services.Zip(clientServiceInfo);
         <div class="row mt-4 rounded rounded-2 border border-2 border-info mb-2 p-2">
-            @foreach (var serv in services)
+            @foreach (var zip in zippedInfo)
             {
-                var servDate = clientServiceInfo.FirstOrDefault(cs => cs.ServiceId == serv.ServiceId)?.ServiceDate;
                 <div class="card col-4">
                     <div class="card-body">
-                        <p class="card-title">@serv.Title</p>
-                        <p class="card-text">@serv.Description</p>
-                        @if (servDate != null)
-                        {
-                            <p class="card-text">Вы записаны на: @servDate?.ToString("MM/dd/yyyy HH:mm")</p>
-                        }
+                        <p class="card-title">@zip.First.Title</p>
+                        <p class="card-text">@zip.First.Description</p>
+                        <p class="card-text">Вы записаны на: @zip.Second.ServiceDate.ToString("MM/dd/yyyy HH:mm")</p>
                     </div>
                 </div>
             }

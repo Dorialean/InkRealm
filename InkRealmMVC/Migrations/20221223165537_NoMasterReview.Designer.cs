@@ -3,6 +3,7 @@ using System;
 using InkRealmMVC.Models.DbModels;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace InkRealmMVC.Migrations
 {
     [DbContext(typeof(InkRealmContext))]
-    partial class InkRealmContextModelSnapshot : ModelSnapshot
+    [Migration("20221223165537_NoMasterReview")]
+    partial class NoMasterReview
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -147,6 +150,10 @@ namespace InkRealmMVC.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)")
                         .HasColumnName("login");
+
+                    b.Property<string>("OtherInfo")
+                        .HasColumnType("jsonb")
+                        .HasColumnName("other_info");
 
                     b.Property<byte[]>("Password")
                         .IsRequired()
